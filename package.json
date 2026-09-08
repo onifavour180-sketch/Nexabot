@@ -8,6 +8,7 @@
     "start": "next start"
   },
   "dependencies": {
+    "@netlify/plugin-nextjs": "^5.15.13",
     "next": "latest",
     "openai": "^7.10.0",
     "react": "latest",
