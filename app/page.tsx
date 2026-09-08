@@ -5,11 +5,12 @@ import { ChatBot } from "./NexaBotChat";
 import { useState } from "react";
 
 export default function Home() {
-  const [menuOpen, setMenuOpen] = useState(false);
-  const [openFaq, setOpenFaq] = useState<number | null>(null);
+ const [menuOpen, setMenuOpen] = useState(false);
+const [openFaq, setOpenFaq] = useState<number | null>(null);
+const [activeDemo, setActiveDemo] = useState("Real Estate");
 
   const faqs = [
-    {
+    { 
       question: "What exactly does NexaBot build?",
       answer:
         "We build AI-powered chatbots and automation systems that help businesses answer customers, capture leads, qualify prospects, and automate repetitive conversations.",
@@ -790,6 +791,118 @@ export default function Home() {
         }
 
         .pricing-card {
+                .pricing-card-top {
+          position: relative;
+        }
+
+        .pricing-label {
+          display: inline-block;
+          color: #7468ff;
+          font-size: 10px;
+          text-transform: uppercase;
+          letter-spacing: 0.16em;
+          font-weight: 700;
+          margin-bottom: 12px;
+        }
+
+        .pricing-price {
+          display: flex;
+          align-items: baseline;
+          gap: 5px;
+          margin: 24px 0 4px;
+        }
+
+        .pricing-price .currency {
+          font-size: 18px;
+          color: #999;
+        }
+
+        .pricing-price .amount {
+          font-size: 52px;
+          line-height: 1;
+          letter-spacing: -0.06em;
+          font-weight: 700;
+        }
+
+        .pricing-price .price-note {
+          color: #666;
+          font-size: 11px;
+        }
+
+        .monthly-price {
+          margin: 8px 0 0;
+          color: #777;
+          font-size: 12px;
+        }
+
+        .pricing-divider {
+          height: 1px;
+          background: rgba(255, 255, 255, 0.08);
+          margin: 25px 0;
+        }
+
+        .pricing-button {
+          display: block;
+          text-align: center;
+          padding: 13px 16px;
+          border: 1px solid rgba(255, 255, 255, 0.12);
+          border-radius: 100px;
+          color: white;
+          text-decoration: none;
+          font-size: 13px;
+          font-weight: 600;
+          transition:
+            background 0.2s ease,
+            color 0.2s ease,
+            transform 0.2s ease;
+        }
+
+        .pricing-button:hover {
+          background: white;
+          color: black;
+          transform: translateY(-2px);
+        }
+
+        .pricing-button-primary {
+          background: white;
+          color: black;
+        }
+
+        .pricing-button-primary:hover {
+          background: #e9e6ff;
+        }
+
+        .pricing-featured {
+          background:
+            radial-gradient(
+              circle at 50% 0%,
+              rgba(91, 74, 255, 0.2),
+              transparent 45%
+            ),
+            rgba(255, 255, 255, 0.04);
+          border-color: rgba(111, 96, 255, 0.4);
+          position: relative;
+        }
+
+        .pricing-badge {
+          display: inline-block;
+          padding: 6px 10px;
+          margin-bottom: 18px;
+          border: 1px solid rgba(124, 112, 255, 0.3);
+          border-radius: 100px;
+          color: #8277ff;
+          background: rgba(112, 99, 255, 0.08);
+          font-size: 9px;
+          font-weight: 700;
+          letter-spacing: 0.12em;
+        }
+
+        .pricing-custom-price {
+          font-size: 42px;
+          font-weight: 700;
+          letter-spacing: -0.05em;
+          margin: 24px 0 6px;
+        }
           padding: 34px;
           border: 1px solid rgba(255, 255, 255, 0.09);
           border-radius: 22px;
@@ -925,7 +1038,236 @@ export default function Home() {
           color: #555;
           font-size: 11px;
         }
+                  .demo-buttons {
+          display: flex;
+          justify-content: center;
+          gap: 10px;
+          flex-wrap: wrap;
+          margin-top: 45px;
+        }
 
+        .demo-button {
+          padding: 11px 18px;
+          border: 1px solid rgba(255, 255, 255, 0.1);
+          border-radius: 100px;
+          background: rgba(255, 255, 255, 0.03);
+          color: #777;
+          font-size: 12px;
+          cursor: pointer;
+          transition:
+            background 0.2s ease,
+            color 0.2s ease,
+            transform 0.2s ease;
+        }
+
+        .demo-button:hover {
+          color: white;
+          transform: translateY(-2px);
+        }
+
+        .demo-button.active {
+          background: white;
+          color: black;
+        }
+
+        .demo-panel {
+          margin-top: 25px;
+          min-height: 330px;
+          padding: 45px;
+          border: 1px solid rgba(255, 255, 255, 0.1);
+          border-radius: 24px;
+          background:
+            radial-gradient(
+              circle at 10% 10%,
+              rgba(87, 68, 255, 0.14),
+              transparent 35%
+            ),
+            rgba(255, 255, 255, 0.025);
+          display: grid;
+          grid-template-columns: 110px 1fr;
+          gap: 30px;
+          align-items: center;
+        }
+
+        .demo-icon {
+          width: 90px;
+          height: 90px;
+          border-radius: 25px;
+          display: grid;
+          place-items: center;
+          background: rgba(255, 255, 255, 0.06);
+          border: 1px solid rgba(255, 255, 255, 0.09);
+          font-size: 38px;
+        }
+
+        .demo-label {
+          color: #7468ff;
+          font-size: 10px;
+          font-weight: 700;
+          letter-spacing: 0.18em;
+          margin-bottom: 12px;
+        }
+
+        .demo-content h3 {
+          margin: 0;
+          font-size: 30px;
+          line-height: 1.08;
+          letter-spacing: -0.05em;
+          max-width: 700px;
+        }
+
+        .demo-content p {
+          color: #777;
+          line-height: 1.7;
+          font-size: 14px;
+          max-width: 700px;
+          margin: 18px 0 0;
+        }
+
+        .demo-points {
+          display: flex;
+          flex-wrap: wrap;
+          gap: 10px 20px;
+          margin-top: 25px;
+        }
+
+        .demo-points span {
+          color: #aaa;
+          font-size: 12px;
+        }
+
+        .demo-cta {
+          text-align: center;
+          margin-top: 35px;
+        }
+
+        .demo-cta p {
+          color: #666;
+          font-size: 13px;
+          margin-bottom: 16px;
+        }
+        .showcase-grid {
+          display: grid;
+          grid-template-columns: repeat(3, 1fr);
+          gap: 12px;
+          margin-top: 60px;
+        }
+
+        .showcase-card {
+          padding: 26px;
+          border: 1px solid rgba(255, 255, 255, 0.09);
+          border-radius: 22px;
+          background:
+            radial-gradient(
+              circle at 90% 0%,
+              rgba(87, 68, 255, 0.1),
+              transparent 35%
+            ),
+            rgba(255, 255, 255, 0.025);
+          transition:
+            transform 0.3s ease,
+            border-color 0.3s ease;
+        }
+
+        .showcase-card:hover {
+          transform: translateY(-6px);
+          border-color: rgba(119, 105, 255, 0.35);
+        }
+
+        .showcase-top {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+        }
+
+        .showcase-icon {
+          width: 46px;
+          height: 46px;
+          display: grid;
+          place-items: center;
+          border-radius: 14px;
+          background: rgba(255, 255, 255, 0.06);
+          font-size: 21px;
+        }
+
+        .showcase-status {
+          color: #6bffaf;
+          font-size: 9px;
+          letter-spacing: 0.12em;
+          font-weight: 700;
+        }
+
+        .showcase-label {
+          color: #7468ff;
+          font-size: 9px;
+          letter-spacing: 0.16em;
+          font-weight: 700;
+          margin-top: 24px;
+        }
+
+        .showcase-card h3 {
+          margin: 9px 0 10px;
+          font-size: 22px;
+          letter-spacing: -0.04em;
+        }
+
+        .showcase-card > p {
+          color: #727272;
+          font-size: 13px;
+          line-height: 1.65;
+          min-height: 63px;
+        }
+
+        .showcase-chat {
+          margin-top: 24px;
+          padding: 15px;
+          border: 1px solid rgba(255, 255, 255, 0.07);
+          border-radius: 16px;
+          background: rgba(0, 0, 0, 0.25);
+        }
+
+        .showcase-message {
+          width: fit-content;
+          max-width: 90%;
+          padding: 9px 11px;
+          margin-bottom: 9px;
+          border-radius: 11px;
+          background: rgba(255, 255, 255, 0.06);
+          color: #aaa;
+          font-size: 11px;
+          line-height: 1.5;
+        }
+
+        .showcase-message:last-child {
+          margin-bottom: 0;
+        }
+
+        .showcase-message.user {
+          margin-left: auto;
+          background: #5848ff;
+          color: white;
+        }
+
+        .showcase-button {
+          display: block;
+          margin-top: 20px;
+          padding: 12px;
+          text-align: center;
+          border: 1px solid rgba(255, 255, 255, 0.12);
+          border-radius: 100px;
+          color: white;
+          text-decoration: none;
+          font-size: 12px;
+          font-weight: 600;
+          transition:
+            background 0.2s ease,
+            color 0.2s ease;
+        }
+
+        .showcase-button:hover {
+          background: white;
+          color: black;
+        }
         .faq-wrap {
           max-width: 820px;
           margin: 60px auto 0;
@@ -1044,6 +1386,9 @@ export default function Home() {
           .nav-links,
           .nav-cta {
             display: none;
+                      .showcase-grid {
+            grid-template-columns: 1fr 1fr;
+          }
           }
 
           .mobile-button {
@@ -1076,6 +1421,9 @@ export default function Home() {
         @media (max-width: 600px) {
           .container {
             width: min(100% - 28px, 1180px);
+                      .showcase-grid {
+            grid-template-columns: 1fr;
+          }
           }
 
           .hero {
@@ -1236,9 +1584,14 @@ export default function Home() {
               </p>
 
               <div className="hero-buttons">
-                <a href="#contact" className="button-primary">
-                  Start a Project →
-                </a>
+               <a
+  href="https://wa.me/2349018324277?text=Hi%20NexaBot%20Agency!%20I'd%20like%20to%20start%20an%20AI%20project."
+  target="_blank"
+  rel="noopener noreferrer"
+  className="button-primary"
+>
+  Start a Project →
+</a>
 
                 <a href="#services" className="button-secondary">
                   Explore Solutions
@@ -1532,131 +1885,385 @@ export default function Home() {
                 AI into their customer experience.
               </p>
             </div>
+<div className="pricing-grid">
+  {/* Starter */}
+  <div className="pricing-card">
+    <div className="pricing-card-top">
+      <span className="pricing-label">STARTER</span>
+      <h3>AI Essentials</h3>
+      <p className="pricing-description">
+        Everything you need to add a professional AI assistant to your website.
+      </p>
+    </div>
 
-            <div className="pricing-grid">
-              <div className="pricing-card">
-                <h3>Starter</h3>
+    <div className="pricing-price">
+      <span className="currency">$</span>
+      <span className="amount">499</span>
+      <span className="price-note">setup</span>
+    </div>
 
-                <div className="price">
-                  $499 <small>setup</small>
-                </div>
+    <p className="monthly-price">+ $199/month</p>
 
-                <div className="pricing-description">
-                  A focused AI chatbot for businesses getting started.
-                </div>
+    <div className="pricing-divider" />
 
-                <ul className="pricing-features">
-                  <li>Website AI chatbot</li>
-                  <li>Business knowledge setup</li>
-                  <li>Basic lead capture</li>
-                  <li>Conversation customization</li>
-                </ul>
+    <ul className="pricing-features">
+      <li>✓ AI website chatbot</li>
+      <li>✓ FAQ & business information</li>
+      <li>✓ Lead capture</li>
+      <li>✓ Basic customization</li>
+      <li>✓ Mobile-friendly experience</li>
+    </ul>
 
-                <a href="#contact" className="price-button">
-                  Get Started
-                </a>
-              </div>
+    <a
+      href="https://wa.me/2349018324277?text=Hi%20NexaBot%20Agency!%20I'm%20interested%20in%20the%20Starter%20AI%20Essentials%20package."
+      target="_blank"
+      rel="noopener noreferrer"
+      className="pricing-button"
+    >
+      Get Started →
+    </a>
+  </div>
 
-              <div className="pricing-card featured">
-                <div className="popular">Most popular</div>
+  {/* Growth */}
+  <div className="pricing-card pricing-featured">
+    <div className="pricing-badge">MOST POPULAR</div>
 
-                <h3>Growth</h3>
+    <div className="pricing-card-top">
+      <span className="pricing-label">GROWTH</span>
+      <h3>AI Growth System</h3>
+      <p className="pricing-description">
+        A more powerful AI system designed to help businesses capture and
+        convert more opportunities.
+      </p>
+    </div>
 
-                <div className="price">
-                  $999 <small>setup</small>
-                </div>
+    <div className="pricing-price">
+      <span className="currency">$</span>
+      <span className="amount">999</span>
+      <span className="price-note">setup</span>
+    </div>
 
-                <div className="pricing-description">
-                  A more advanced system for businesses ready to automate.
-                </div>
+    <p className="monthly-price">+ $299/month</p>
 
-                <ul className="pricing-features">
-                  <li>Everything in Starter</li>
-                  <li>Advanced AI training</li>
-                  <li>Lead qualification</li>
-                  <li>Appointment workflows</li>
-                  <li>Custom conversation flows</li>
-                </ul>
+    <div className="pricing-divider" />
 
-                <a href="#contact" className="price-button">
-                  Start Growing
-                </a>
-              </div>
+    <ul className="pricing-features">
+      <li>✓ Everything in Starter</li>
+      <li>✓ Lead qualification</li>
+      <li>✓ Appointment booking</li>
+      <li>✓ Custom business knowledge</li>
+      <li>✓ Sales-focused conversations</li>
+      <li>✓ Advanced automation</li>
+    </ul>
 
-              <div className="pricing-card">
-                <h3>Custom</h3>
+    <a
+      href="https://wa.me/2349018324277?text=Hi%20NexaBot%20Agency!%20I'm%20interested%20in%20the%20Growth%20AI%20package."
+      target="_blank"
+      rel="noopener noreferrer"
+      className="pricing-button pricing-button-primary"
+    >
+      Book a Demo →
+    </a>
+  </div>
 
-                <div className="price">Let's Talk</div>
+  {/* Custom */}
+  <div className="pricing-card">
+    <div className="pricing-card-top">
+      <span className="pricing-label">CUSTOM</span>
+      <h3>AI Business System</h3>
+      <p className="pricing-description">
+        Custom AI automation for businesses with advanced requirements.
+      </p>
+    </div>
 
-                <div className="pricing-description">
-                  Custom AI automation for more complex business needs.
-                </div>
+    <div className="pricing-custom-price">
+      Let's Talk
+    </div>
 
-                <ul className="pricing-features">
-                  <li>Custom AI workflows</li>
-                  <li>Advanced integrations</li>
-                  <li>Custom business logic</li>
-                  <li>Priority support</li>
-                </ul>
+    <p className="monthly-price">
+      Custom pricing based on your requirements
+    </p>
 
-                <a href="#contact" className="price-button">
-                  Contact Us
-                </a>
-              </div>
-            </div>
+    <div className="pricing-divider" />
+
+    <ul className="pricing-features">
+      <li>✓ Custom AI workflows</li>
+      <li>✓ WhatsApp integration</li>
+      <li>✓ CRM integrations</li>
+      <li>✓ Advanced automation</li>
+      <li>✓ Multiple business systems</li>
+      <li>✓ Custom deployment</li>
+    </ul>
+
+    <a
+      href="https://wa.me/2349018324277?text=Hi%20NexaBot%20Agency!%20I'd%20like%20to discuss a custom AI system."
+      target="_blank"
+      rel="noopener noreferrer"
+      className="pricing-button"
+    >
+      Talk to NexaBot →
+    </a>
+  </div>
+</div>
           </div>
         </section>
 
-        {/* TESTIMONIALS */}
-        <section className="section section-border">
-          <div className="container">
-            <div className="section-label">What clients could experience</div>
+        {/* AI DEMO */}
+<section className="section section-border">
+  <div className="container">
+    <div style={{ textAlign: "center" }}>
+      <div className="section-label">See NexaBot in action</div>
 
-            <h2 className="section-heading">
-              Better conversations. Better opportunities.
-            </h2>
+      <h2 className="section-heading" style={{ margin: "0 auto" }}>
+        Imagine what AI could do for your business.
+      </h2>
 
-            <p className="section-subtitle">
-              A polished agency needs social proof — but we won't invent
-              testimonials or pretend these are real clients.
+      <p
+        className="section-subtitle"
+        style={{ marginLeft: "auto", marginRight: "auto" }}
+      >
+        Explore a few ways NexaBot can be customized for different types of
+        businesses.
+      </p>
+    </div>
+
+    <div className="demo-buttons">
+      {["Real Estate", "E-commerce", "Consulting"].map((business) => (
+        <button
+          key={business}
+          className={`demo-button ${
+            activeDemo === business ? "active" : ""
+          }`}
+          onClick={() => setActiveDemo(business)}
+        >
+          {business}
+        </button>
+      ))}
+    </div>
+
+    <div className="demo-panel">
+      {activeDemo === "Real Estate" && (
+        <>
+          <div className="demo-icon">🏠</div>
+
+          <div className="demo-content">
+            <div className="demo-label">REAL ESTATE AI</div>
+
+            <h3>Turn property enquiries into qualified leads.</h3>
+
+            <p>
+              NexaBot can answer property questions, identify serious buyers,
+              collect lead information, and help prospects schedule viewings.
             </p>
 
-            <div className="testimonials">
-              {[
-                [
-                  "“The chatbot made it much easier for visitors to understand what we offer and take the next step.”",
-                  "Sample client feedback",
-                  "Replace with real client",
-                ],
-                [
-                  "“We wanted something that felt like part of our brand, not another generic chatbot. NexaBot delivered that experience.”",
-                  "Sample client feedback",
-                  "Replace with real client",
-                ],
-                [
-                  "“The biggest difference was having an intelligent first response available to customers at any time.”",
-                  "Sample client feedback",
-                  "Replace with real client",
-                ],
-              ].map(([quote, name, role]) => (
-                <div className="testimonial" key={quote}>
-                  <div className="stars">★★★★★</div>
-
-                  <p>{quote}</p>
-
-                  <div className="person">
-                    <div className="person-avatar" />
-                    <div>
-                      <strong>{name}</strong>
-                      <span>{role}</span>
-                    </div>
-                  </div>
-                </div>
-              ))}
+            <div className="demo-points">
+              <span>✓ Property questions</span>
+              <span>✓ Lead qualification</span>
+              <span>✓ Viewing requests</span>
+              <span>✓ 24/7 responses</span>
             </div>
           </div>
-        </section>
+        </>
+      )}
 
+      {activeDemo === "E-commerce" && (
+        <>
+          <div className="demo-icon">🛍️</div>
+
+          <div className="demo-content">
+            <div className="demo-label">E-COMMERCE AI</div>
+
+            <h3>Help shoppers find what they need faster.</h3>
+
+            <p>
+              NexaBot can answer product questions, recommend products, handle
+              common customer requests, capture leads, and guide shoppers
+              toward purchasing.
+            </p>
+
+            <div className="demo-points">
+              <span>✓ Product questions</span>
+              <span>✓ Product recommendations</span>
+              <span>✓ Customer support</span>
+              <span>✓ Sales assistance</span>
+            </div>
+          </div>
+        </>
+      )}
+
+      {activeDemo === "Consulting" && (
+        <>
+          <div className="demo-icon">💼</div>
+
+          <div className="demo-content">
+            <div className="demo-label">CONSULTING AI</div>
+
+            <h3>Convert website visitors into consultation opportunities.</h3>
+
+            <p>
+              NexaBot can answer common questions, understand what a prospect
+              needs, qualify potential clients, collect project information,
+              and guide them toward booking a consultation.
+            </p>
+
+            <div className="demo-points">
+              <span>✓ Prospect qualification</span>
+              <span>✓ FAQ automation</span>
+              <span>✓ Consultation requests</span>
+              <span>✓ Lead capture</span>
+            </div>
+          </div>
+        </>
+      )}
+    </div>
+
+    <div className="demo-cta">
+      <p>Want an AI system designed around your business?</p>
+
+      <a
+        href="https://wa.me/2349018324277?text=Hi%20NexaBot%20Agency!%20I'd%20like%20an%20AI%20system%20for%20my%20business."
+        target="_blank"
+        rel="noopener noreferrer"
+        className="button-primary"
+      >
+        Build My AI System →
+      </a>
+    </div>
+  </div>
+</section>
+{/* DEMO SHOWCASE */}
+<section className="section section-border">
+  <div className="container">
+    <div style={{ textAlign: "center" }}>
+      <div className="section-label">Live AI examples</div>
+
+      <h2 className="section-heading" style={{ margin: "0 auto" }}>
+        See what NexaBot can build for you.
+      </h2>
+
+      <p
+        className="section-subtitle"
+        style={{ marginLeft: "auto", marginRight: "auto" }}
+      >
+        These examples show how an AI assistant could work inside different
+        types of businesses.
+      </p>
+    </div>
+
+    <div className="showcase-grid">
+      <div className="showcase-card">
+        <div className="showcase-top">
+          <span className="showcase-icon">🏠</span>
+          <span className="showcase-status">● LIVE DEMO</span>
+        </div>
+
+        <div className="showcase-label">REAL ESTATE</div>
+
+        <h3>AI Property Assistant</h3>
+
+        <p>
+          Helps visitors discover properties, answer questions, qualify buyers,
+          and request viewings.
+        </p>
+
+        <div className="showcase-chat">
+          <div className="showcase-message">
+            Hi! 👋 Looking for a property?
+          </div>
+          <div className="showcase-message user">
+            Yes, I'm looking for a 3-bedroom house.
+          </div>
+          <div className="showcase-message">
+            Great. What's your preferred location and budget?
+          </div>
+        </div>
+
+        <a
+          href="https://wa.me/2349018324277?text=Hi%20NexaBot%20Agency!%20I'd%20like%20an%20AI%20assistant%20for%20my%20real%20estate%20business."
+          target="_blank"
+          rel="noopener noreferrer"
+          className="showcase-button"
+        >
+          Build This System →
+        </a>
+      </div>
+
+      <div className="showcase-card">
+        <div className="showcase-top">
+          <span className="showcase-icon">🛍️</span>
+          <span className="showcase-status">● LIVE DEMO</span>
+        </div>
+
+        <div className="showcase-label">E-COMMERCE</div>
+
+        <h3>AI Shopping Assistant</h3>
+
+        <p>
+          Answers product questions, recommends products, supports customers,
+          and helps turn conversations into sales.
+        </p>
+
+        <div className="showcase-chat">
+          <div className="showcase-message">
+            Hey! 👋 What are you looking for today?
+          </div>
+          <div className="showcase-message user">
+            I need a laptop for university.
+          </div>
+          <div className="showcase-message">
+            I can help with that. What's your preferred budget?
+          </div>
+        </div>
+
+        <a
+          href="https://wa.me/2349018324277?text=Hi%20NexaBot%20Agency!%20I'd%20like%20an%20AI%20assistant%20for%20my%20e-commerce%20business."
+          target="_blank"
+          rel="noopener noreferrer"
+          className="showcase-button"
+        >
+          Build This System →
+        </a>
+      </div>
+
+      <div className="showcase-card">
+        <div className="showcase-top">
+          <span className="showcase-icon">💼</span>
+          <span className="showcase-status">● LIVE DEMO</span>
+        </div>
+
+        <div className="showcase-label">CONSULTING</div>
+
+        <h3>AI Client Assistant</h3>
+
+        <p>
+          Answers questions, understands visitor needs, qualifies prospects,
+          and guides them toward booking a consultation.
+        </p>
+
+        <div className="showcase-chat">
+          <div className="showcase-message">
+            Welcome! 👋 How can our consulting team help?
+          </div>
+          <div className="showcase-message user">
+            I need help improving my business.
+          </div>
+          <div className="showcase-message">
+            Tell me a little about your business and your biggest challenge.
+          </div>
+        </div>
+
+        <a
+          href="https://wa.me/2349018324277?text=Hi%20NexaBot%20Agency!%20I'd%20like%20an%20AI%20assistant%20for%20my%20consulting%20business."
+          target="_blank"
+          rel="noopener noreferrer"
+          className="showcase-button"
+        >
+          Build This System →
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
         {/* FAQ */}
         <section id="faq" className="section section-border">
           <div className="container">
