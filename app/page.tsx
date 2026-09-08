@@ -5,10 +5,10 @@ import { ChatBot } from "./NexaBotChat";
 import { useState } from "react";
 
 export default function Home() {
- const [menuOpen, setMenuOpen] = useState(false);
+const [menuOpen, setMenuOpen] = useState(false);
 const [openFaq, setOpenFaq] = useState<number | null>(null);
 const [activeDemo, setActiveDemo] = useState("Real Estate");
-
+const [currency, setCurrency] = useState<"NGN" | "USD">("NGN");
   const faqs = [
     { 
       question: "What exactly does NexaBot build?",
@@ -783,7 +783,35 @@ const [activeDemo, setActiveDemo] = useState("Real Estate");
           line-height: 1.5;
         }
 
+        .currency-switch {
+          display: inline-flex;
+          margin-top: 28px;
+          padding: 4px;
+          border: 1px solid rgba(255, 255, 255, 0.1);
+          border-radius: 100px;
+          background: rgba(255, 255, 255, 0.03);
+        }
+
+        .currency-switch button {
+          border: none;
+          background: transparent;
+          color: #666;
+          padding: 8px 15px;
+          border-radius: 100px;
+          font-size: 11px;
+          font-weight: 600;
+          cursor: pointer;
+          transition:
+            background 0.2s ease,
+            color 0.2s ease;
+        }
+
+        .currency-switch button.currency-active {
+          background: white;
+          color: black;
+        }
         .pricing-grid {
+        
           display: grid;
           grid-template-columns: repeat(3, 1fr);
           gap: 12px;
@@ -1596,6 +1624,15 @@ const [activeDemo, setActiveDemo] = useState("Real Estate");
                 <a href="#services" className="button-secondary">
                   Explore Solutions
                 </a>
+                <button
+  type="button"
+  className="button-secondary"
+  onClick={() =>
+    window.dispatchEvent(new Event("open-nexabot-chat"))
+  }
+>
+  Talk to NexaBot ✦
+</button>
               </div>
 
               <div className="hero-proof">
@@ -1870,20 +1907,35 @@ const [activeDemo, setActiveDemo] = useState("Real Estate");
             <div style={{ textAlign: "center" }}>
               <div className="section-label">Simple pricing</div>
 
-              <h2
-                className="section-heading"
-                style={{ margin: "0 auto" }}
-              >
-                Start small. Scale when you're ready.
-              </h2>
+            <h2
+  className="section-heading"
+  style={{ margin: "0 auto" }}
+>
+  AI that pays for itself.
+</h2>
 
               <p
-                className="section-subtitle"
-                style={{ marginLeft: "auto", marginRight: "auto" }}
-              >
-                Flexible starting points for businesses looking to introduce
-                AI into their customer experience.
-              </p>
+  className="section-subtitle"
+  style={{ marginLeft: "auto", marginRight: "auto" }}
+>
+  Choose the AI system that fits your business today, then scale as your
+  needs grow.
+</p>
+              <div className="currency-switch">
+  <button
+    className={currency === "NGN" ? "currency-active" : ""}
+    onClick={() => setCurrency("NGN")}
+  >
+    ₦ NGN
+  </button>
+
+  <button
+    className={currency === "USD" ? "currency-active" : ""}
+    onClick={() => setCurrency("USD")}
+  >
+    $ USD
+  </button>
+</div>
             </div>
 <div className="pricing-grid">
   {/* Starter */}
@@ -1897,12 +1949,20 @@ const [activeDemo, setActiveDemo] = useState("Real Estate");
     </div>
 
     <div className="pricing-price">
-      <span className="currency">$</span>
-      <span className="amount">499</span>
-      <span className="price-note">setup</span>
-    </div>
+  <span className="currency">
+    {currency === "NGN" ? "₦" : "$"}
+  </span>
 
-    <p className="monthly-price">+ $199/month</p>
+  <span className="amount">
+    {currency === "NGN" ? "750,000" : "499"}
+  </span>
+
+  <span className="price-note">setup</span>
+</div>
+
+<p className="monthly-price">
+  + {currency === "NGN" ? "₦200,000" : "$199"}/month
+</p>
 
     <div className="pricing-divider" />
 
@@ -1937,13 +1997,21 @@ const [activeDemo, setActiveDemo] = useState("Real Estate");
       </p>
     </div>
 
-    <div className="pricing-price">
-      <span className="currency">$</span>
-      <span className="amount">999</span>
-      <span className="price-note">setup</span>
-    </div>
+  <div className="pricing-price">
+  <span className="currency">
+    {currency === "NGN" ? "₦" : "$"}
+  </span>
 
-    <p className="monthly-price">+ $299/month</p>
+  <span className="amount">
+    {currency === "NGN" ? "1,500,000" : "999"}
+  </span>
+
+  <span className="price-note">setup</span>
+</div>
+
+<p className="monthly-price">
+  + {currency === "NGN" ? "₦300,000" : "$299"}/month
+</p>
 
     <div className="pricing-divider" />
 

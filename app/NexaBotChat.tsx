@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 type Message = {
   role: "user" | "assistant";
@@ -9,6 +9,17 @@ type Message = {
 
 export function ChatBot() {
   const [open, setOpen] = useState(false);
+  useEffect(() => {
+  const openChat = () => {
+    setOpen(true);
+  };
+
+  window.addEventListener("open-nexabot-chat", openChat);
+
+  return () => {
+    window.removeEventListener("open-nexabot-chat", openChat);
+  };
+}, []);
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
 
