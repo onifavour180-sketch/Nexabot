@@ -7,7 +7,13 @@ type Message = {
   content: string;
 };
 
-export function ChatBot() {
+export function ChatBot({
+  apiEndpoint = "/api/chat",
+  businessName = "NexaBot",
+}: {
+  apiEndpoint?: string;
+  businessName?: string;
+}) {
   const [open, setOpen] = useState(false);
   useEffect(() => {
   const openChat = () => {
@@ -27,7 +33,9 @@ export function ChatBot() {
     {
       role: "assistant",
       content:
-        "Hi! 👋 I'm NexaBot. How can I help you learn more about our AI solutions?",
+  businessName === "KLEMZ Autos"
+    ? "Hi! 👋 Welcome to KLEMZ Autos Workshop. How can I help you today?"
+    : "Hi! 👋 I'm NexaBot. How can I help you learn more about our AI solutions?",
     },
   ]);
 
@@ -48,7 +56,7 @@ export function ChatBot() {
     setLoading(true);
 
     try {
-      const response = await fetch("/api/chat", {
+     const response = await fetch(apiEndpoint, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -244,7 +252,72 @@ export function ChatBot() {
                   lineHeight: 1.55,
                 }}
               >
-                {message.content}
+     {message.content
+  .split("\n")
+  .map((line, lineIndex) => {
+    const whatsappMatch = line.match(
+      /^\[\[WHATSAPP\|(.*)\]\]$/
+    );
+
+    if (whatsappMatch) {
+      const whatsappUrl =
+        `https://wa.me/2348141528264?text=${whatsappMatch[1]}`;
+
+      return (
+        <div key={lineIndex} style={{ marginTop: "8px" }}>
+          <a
+            href={whatsappUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            style={{
+              display: "inline-block",
+              padding: "11px 15px",
+              borderRadius: "12px",
+              background: "#6455ff",
+              color: "white",
+              textDecoration: "none",
+              fontSize: "12px",
+              fontWeight: 600,
+            }}
+          >
+            📲 Send Enquiry to KLEMZ Autos
+          </a>
+        </div>
+      );
+    }
+
+    if (line.includes("08141528264")) {
+      return (
+        <span key={lineIndex}>
+          {line.split("08141528264")[0]}
+
+          <a
+            href="https://wa.me/2348141528264"
+            target="_blank"
+            rel="noopener noreferrer"
+            style={{
+              color: "#8f84ff",
+              textDecoration: "underline",
+              fontWeight: 600,
+            }}
+          >
+            08141528264
+          </a>
+
+          {line.split("08141528264")[1]}
+          <br />
+        </span>
+      );
+    }
+
+    return (
+      <span key={lineIndex}>
+        {line}
+        {lineIndex <
+          message.content.split("\n").length - 1 && <br />}
+      </span>
+    );
+  })}
               </div>
             ))}
 
