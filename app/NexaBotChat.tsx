@@ -105,7 +105,7 @@ export function ChatBot() {
           style={{
             position: "fixed",
             right: "24px",
-            bottom: "24px",
+            bottom: "70px",
             width: "62px",
             height: "62px",
             borderRadius: "50%",
