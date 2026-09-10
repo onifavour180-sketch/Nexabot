@@ -2429,8 +2429,12 @@ const [currency, setCurrency] = useState<"NGN" | "USD">("NGN");
             </div>
           </div>
         </footer>
-            </div>
-             <ChatBot />
-    </>
-  );
+   </div>
+<ChatBot
+  apiEndpoint="/api/chat"
+  businessName="NexaBot"
+  initialMessage="Hi! 👋 I'm NexaBot. How can I help you learn more about our AI solutions?"
+/>
+</>
+);
 }

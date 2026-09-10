@@ -3,10 +3,11 @@ import { ChatBot } from "../NexaBotChat";
 export default function EmbedPage() {
   return (
     <main className="h-screen w-screen m-0 p-0 bg-transparent overflow-hidden flex flex-col justify-end items-end">
-      <ChatBot
-        apiEndpoint="/api/klemz-chat"
-        businessName="KLEMZ Autos"
-      />
+    <ChatBot
+  apiEndpoint="/api/klemz-chat"
+  businessName="KLEMZ Autos"
+  initialMessage="Hi! 👋 Welcome to KLEMZ Autos Workshop. How can I help you today?"
+/>
     </main>
   );
 }

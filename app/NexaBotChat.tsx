@@ -10,34 +10,40 @@ type Message = {
 export function ChatBot({
   apiEndpoint = "/api/chat",
   businessName = "NexaBot",
+  initialMessage,
 }: {
   apiEndpoint?: string;
   businessName?: string;
+  initialMessage?: string;
 }) {
   const [open, setOpen] = useState(false);
-  useEffect(() => {
-  const openChat = () => {
-    setOpen(true);
-  };
-
-  window.addEventListener("open-nexabot-chat", openChat);
-
-  return () => {
-    window.removeEventListener("open-nexabot-chat", openChat);
-  };
-}, []);
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
+
+  const isKlemz = businessName === "KLEMZ Autos";
+
+  const defaultMessage = isKlemz
+    ? "Hi! 👋 Welcome to KLEMZ Autos Workshop. How can I help you today?"
+    : "Hi! 👋 I'm NexaBot. How can I help you learn more about our AI solutions?";
 
   const [messages, setMessages] = useState<Message[]>([
     {
       role: "assistant",
-      content:
-  businessName === "KLEMZ Autos"
-    ? "Hi! 👋 Welcome to KLEMZ Autos Workshop. How can I help you today?"
-    : "Hi! 👋 I'm NexaBot. How can I help you learn more about our AI solutions?",
+      content: initialMessage || defaultMessage,
     },
   ]);
+
+  useEffect(() => {
+    const openChat = () => {
+      setOpen(true);
+    };
+
+    window.addEventListener("open-nexabot-chat", openChat);
+
+    return () => {
+      window.removeEventListener("open-nexabot-chat", openChat);
+    };
+  }, []);
 
   async function sendMessage() {
     const text = input.trim();
@@ -56,7 +62,7 @@ export function ChatBot({
     setLoading(true);
 
     try {
-     const response = await fetch(apiEndpoint, {
+      const response = await fetch(apiEndpoint, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -103,13 +109,93 @@ export function ChatBot({
     }
   }
 
+  function renderMessageContent(content: string) {
+    return content.split("\n").map((line, lineIndex) => {
+      // Detect WhatsApp button format:
+      // [[WHATSAPP|message here]]
+      const whatsappMatch = line.match(
+        /^\[\[WHATSAPP\|(.*)\]\]$/
+      );
+
+      if (whatsappMatch) {
+        const message = whatsappMatch[1];
+
+        const whatsappUrl = `https://wa.me/2348141528264?text=${encodeURIComponent(
+          message
+        )}`;
+
+        return (
+          <div
+            key={lineIndex}
+            style={{ marginTop: "8px" }}
+          >
+            <a
+              href={whatsappUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              style={{
+                display: "inline-block",
+                padding: "11px 15px",
+                borderRadius: "12px",
+                background: "#25D366",
+                color: "white",
+                textDecoration: "none",
+                fontSize: "12px",
+                fontWeight: 600,
+              }}
+            >
+              📲 Send Enquiry to {businessName}
+            </a>
+          </div>
+        );
+      }
+
+      if (line.includes("08141528264")) {
+        const parts = line.split("08141528264");
+
+        return (
+          <span key={lineIndex}>
+            {parts[0]}
+
+            <a
+              href="https://wa.me/2348141528264"
+              target="_blank"
+              rel="noopener noreferrer"
+              style={{
+                color: "#8f84ff",
+                textDecoration: "underline",
+                fontWeight: 600,
+              }}
+            >
+              08141528264
+            </a>
+
+            {parts[1]}
+
+            {lineIndex <
+              content.split("\n").length - 1 && <br />}
+          </span>
+        );
+      }
+
+      return (
+        <span key={lineIndex}>
+          {line}
+
+          {lineIndex <
+            content.split("\n").length - 1 && <br />}
+        </span>
+      );
+    });
+  }
+
   return (
     <>
       {/* Floating button */}
       {!open && (
         <button
           onClick={() => setOpen(true)}
-          aria-label="Open NexaBot"
+          aria-label={`Open ${businessName}`}
           style={{
             position: "fixed",
             right: "24px",
@@ -123,7 +209,8 @@ export function ChatBot({
             color: "white",
             fontSize: "25px",
             cursor: "pointer",
-            boxShadow: "0 15px 50px rgba(70,50,255,0.45)",
+            boxShadow:
+              "0 15px 50px rgba(70,50,255,0.45)",
             zIndex: 100,
           }}
         >
@@ -143,7 +230,8 @@ export function ChatBot({
             height: "560px",
             maxHeight: "calc(100vh - 48px)",
             background: "#090909",
-            border: "1px solid rgba(255,255,255,0.12)",
+            border:
+              "1px solid rgba(255,255,255,0.12)",
             borderRadius: "22px",
             boxShadow:
               "0 30px 100px rgba(0,0,0,0.7), 0 0 60px rgba(80,60,255,0.15)",
@@ -187,7 +275,7 @@ export function ChatBot({
                   fontSize: "14px",
                 }}
               >
-                NexaBot AI
+                {businessName}
               </div>
 
               <div
@@ -203,6 +291,7 @@ export function ChatBot({
 
             <button
               onClick={() => setOpen(false)}
+              aria-label="Close chat"
               style={{
                 background: "transparent",
                 border: "none",
@@ -252,69 +341,7 @@ export function ChatBot({
                   lineHeight: 1.55,
                 }}
               >
-{message.content.split("\n").map((line, lineIndex) => {
-  const whatsappMatch = line.match(/^\[\[WHATSAPP\|(.*)\]\]$/);
-
-  if (whatsappMatch) {
-    const whatsappUrl = `https://wa.me/2348141528264?text=${whatsappMatch[1]}`;
-
-    return (
-      <div key={lineIndex} style={{ marginTop: "8px" }}>
-        <a
-          href={whatsappUrl}
-          target="_blank"
-          rel="noopener noreferrer"
-          style={{
-            display: "inline-block",
-            padding: "11px 15px",
-            borderRadius: "12px",
-            background: "#25D366",
-            color: "white",
-            textDecoration: "none",
-            fontSize: "12px",
-            fontWeight: 600,
-          }}
-        >
-          📲 Send Enquiry to KLEMZ Autos
-        </a>
-      </div>
-    );
-  }
-
-  if (line.includes("08141528264")) {
-    const parts = line.split("08141528264");
-
-    return (
-      <span key={lineIndex}>
-        {parts[0]}
-
-        <a
-          href="https://wa.me/2348141528264"
-          target="_blank"
-          rel="noopener noreferrer"
-          style={{
-            color: "#8f84ff",
-            textDecoration: "underline",
-            fontWeight: 600,
-          }}
-        >
-          08141528264
-        </a>
-
-        {parts[1]}
-
-        {lineIndex < message.content.split("\n").length - 1 && <br />}
-      </span>
-    );
-  }
-
-  return (
-    <span key={lineIndex}>
-      {line}
-      {lineIndex < message.content.split("\n").length - 1 && <br />}
-    </span>
-  );
-})}
+                {renderMessageContent(message.content)}
               </div>
             ))}
 
@@ -324,12 +351,13 @@ export function ChatBot({
                   alignSelf: "flex-start",
                   padding: "11px 15px",
                   borderRadius: "15px",
-                  background: "rgba(255,255,255,0.06)",
+                  background:
+                    "rgba(255,255,255,0.06)",
                   color: "#777",
                   fontSize: "13px",
                 }}
               >
-                NexaBot is thinking...
+                {businessName} is thinking...
               </div>
             )}
           </div>
@@ -346,7 +374,8 @@ export function ChatBot({
               style={{
                 display: "flex",
                 gap: "8px",
-                background: "rgba(255,255,255,0.05)",
+                background:
+                  "rgba(255,255,255,0.05)",
                 border:
                   "1px solid rgba(255,255,255,0.08)",
                 borderRadius: "13px",
@@ -359,7 +388,7 @@ export function ChatBot({
                   setInput(event.target.value)
                 }
                 onKeyDown={handleKeyDown}
-                placeholder="Ask NexaBot..."
+                placeholder={`Ask ${businessName}...`}
                 disabled={loading}
                 style={{
                   flex: 1,

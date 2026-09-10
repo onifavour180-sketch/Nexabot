@@ -8,7 +8,6 @@ export default function RootLayout({
     <html lang="en">
       <body>
         {children}
-        <ChatBot businessName="KLEMZ Autos" />
       </body>
     </html>
   );
