@@ -1,1704 +1,211 @@
 "use client";
 
 import { ChatBot } from "./NexaBotChat";
-
 import { useState } from "react";
 
 export default function Home() {
-const [menuOpen, setMenuOpen] = useState(false);
-const [openFaq, setOpenFaq] = useState<number | null>(null);
-const [activeDemo, setActiveDemo] = useState("Real Estate");
-const [currency, setCurrency] = useState<"NGN" | "USD">("NGN");
+  const [menuOpen, setMenuOpen] = useState(false);
+  const [openFaq, setOpenFaq] = useState<number | null>(null);
+
   const faqs = [
-    { 
-      question: "What exactly does NexaBot build?",
-      answer:
-        "We build AI-powered chatbots and automation systems that help businesses answer customers, capture leads, qualify prospects, and automate repetitive conversations.",
+    {
+      q: "What can NexaBot do for my business?",
+      a: "NexaBot can answer common customer questions, collect important enquiry details, qualify potential customers and help your team know who to follow up with.",
     },
     {
-      question: "Will the AI chatbot work 24/7?",
-      answer:
-        "Yes. Once deployed, your chatbot can respond to website visitors around the clock without requiring someone from your team to be online.",
+      q: "Can it be customized for my business?",
+      a: "Yes. NexaBot can be customized around your business, services, products, pricing, locations and frequently asked questions.",
     },
     {
-      question: "Can NexaBot be customized for my business?",
-      answer:
-        "Absolutely. The AI can be configured around your business information, services, frequently asked questions, tone of voice, and customer journey.",
+      q: "Will customers know they are talking to AI?",
+      a: "The experience is designed to feel like a natural conversation. Your customers can ask questions normally and receive immediate helpful responses.",
     },
     {
-      question: "How quickly can my chatbot go live?",
-      answer:
-        "The timeline depends on the complexity of the project. Simple website chatbots can be prepared much faster than advanced systems with multiple integrations and workflows.",
+      q: "Can customers contact my team after chatting?",
+      a: "Yes. NexaBot can guide qualified enquiries toward the next step, including contacting your team through WhatsApp or another preferred channel.",
     },
   ];
 
   return (
     <>
-      <style jsx global>{`
-        * {
-          box-sizing: border-box;
-          scroll-behavior: smooth;
-        }
-
-        html {
-          background: #050505;
-        }
-
-        body {
-          margin: 0;
-          background: #050505;
-          color: #f5f5f5;
-          font-family:
-            Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont,
-            "Segoe UI", sans-serif;
-        }
-
-        ::selection {
-          background: #ffffff;
-          color: #000000;
-        }
-
-        .nexa-page {
-          min-height: 100vh;
-          overflow: hidden;
-          background:
-            radial-gradient(
-              circle at 50% 0%,
-              rgba(82, 61, 255, 0.12),
-              transparent 30%
-            ),
-            #050505;
-        }
-
-        .container {
-          width: min(1180px, calc(100% - 40px));
-          margin: 0 auto;
-        }
-
-        .nav {
-          height: 82px;
-          display: flex;
-          align-items: center;
-          justify-content: space-between;
-          border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-          position: relative;
-          z-index: 50;
-        }
-
-        .logo {
-          display: flex;
-          align-items: center;
-          gap: 10px;
-          color: white;
-          text-decoration: none;
-          font-size: 20px;
-          font-weight: 700;
-          letter-spacing: -0.04em;
-        }
-
-        .logo-mark {
-          width: 30px;
-          height: 30px;
-          border-radius: 9px;
-          background:
-            linear-gradient(135deg, #ffffff 0%, #8d82ff 48%, #503cff 100%);
-          box-shadow: 0 0 30px rgba(93, 75, 255, 0.35);
-          position: relative;
-        }
-
-        .logo-mark::after {
-          content: "";
-          width: 10px;
-          height: 10px;
-          border: 2px solid #050505;
-          border-radius: 50%;
-          position: absolute;
-          left: 8px;
-          top: 8px;
-        }
-
-        .nav-links {
-          display: flex;
-          gap: 34px;
-          align-items: center;
-        }
-
-        .nav-links a {
-          color: #999;
-          text-decoration: none;
-          font-size: 14px;
-          transition: color 0.25s ease;
-        }
-
-        .nav-links a:hover {
-          color: white;
-        }
-
-        .nav-cta {
-          padding: 11px 18px;
-          background: white;
-          color: black !important;
-          border-radius: 100px;
-          font-weight: 600 !important;
-        }
-
-        .mobile-button {
-          display: none;
-          border: 1px solid rgba(255, 255, 255, 0.12);
-          background: rgba(255, 255, 255, 0.04);
-          color: white;
-          width: 42px;
-          height: 42px;
-          border-radius: 50%;
-          font-size: 18px;
-        }
-
-        .mobile-menu {
-          position: absolute;
-          top: 76px;
-          left: 0;
-          right: 0;
-          padding: 18px;
-          background: rgba(10, 10, 10, 0.97);
-          border: 1px solid rgba(255, 255, 255, 0.1);
-          border-radius: 18px;
-          display: flex;
-          flex-direction: column;
-          gap: 6px;
-          backdrop-filter: blur(20px);
-        }
-
-        .mobile-menu a {
-          color: #ddd;
-          text-decoration: none;
-          padding: 14px;
-          border-radius: 12px;
-        }
-
-        .mobile-menu a:hover {
-          background: rgba(255, 255, 255, 0.06);
-        }
-
-        .hero {
-          min-height: 850px;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          position: relative;
-          text-align: center;
-          padding: 100px 0 130px;
-        }
-
-        .hero-grid {
-          position: absolute;
-          inset: 0;
-          opacity: 0.18;
-          background-image:
-            linear-gradient(
-              rgba(255, 255, 255, 0.06) 1px,
-              transparent 1px
-            ),
-            linear-gradient(
-              90deg,
-              rgba(255, 255, 255, 0.06) 1px,
-              transparent 1px
-            );
-          background-size: 70px 70px;
-          mask-image: linear-gradient(to bottom, black, transparent 80%);
-        }
-
-        .hero-orb {
-          position: absolute;
-          width: 650px;
-          height: 650px;
-          border-radius: 50%;
-          background:
-            radial-gradient(
-              circle,
-              rgba(88, 66, 255, 0.26) 0%,
-              rgba(76, 54, 230, 0.09) 32%,
-              transparent 68%
-            );
-          filter: blur(15px);
-          animation: floatOrb 7s ease-in-out infinite;
-        }
-
-        @keyframes floatOrb {
-          0%,
-          100% {
-            transform: translateY(0) scale(1);
-          }
-          50% {
-            transform: translateY(-22px) scale(1.04);
-          }
-        }
-
-        .hero-content {
-          position: relative;
-          z-index: 2;
-          max-width: 920px;
-        }
-
-        .eyebrow {
-          display: inline-flex;
-          align-items: center;
-          gap: 9px;
-          padding: 8px 13px;
-          border: 1px solid rgba(255, 255, 255, 0.12);
-          background: rgba(255, 255, 255, 0.04);
-          border-radius: 100px;
-          color: #b5b5b5;
-          font-size: 12px;
-          margin-bottom: 28px;
-          backdrop-filter: blur(15px);
-        }
-
-        .eyebrow-dot {
-          width: 7px;
-          height: 7px;
-          background: #7c6cff;
-          border-radius: 50%;
-          box-shadow: 0 0 15px #7060ff;
-        }
-
-        .hero h1 {
-          font-size: clamp(54px, 8.5vw, 104px);
-          line-height: 0.91;
-          letter-spacing: -0.075em;
-          margin: 0;
-          font-weight: 700;
-        }
-
-        .gradient-text {
-          background: linear-gradient(
-            100deg,
-            #ffffff 10%,
-            #a59cff 48%,
-            #6555ff 75%,
-            #ffffff 100%
-          );
-          background-size: 200% auto;
-          color: transparent;
-          background-clip: text;
-          -webkit-background-clip: text;
-          animation: gradientMove 5s linear infinite;
-        }
-
-        @keyframes gradientMove {
-          to {
-            background-position: 200% center;
-          }
-        }
-
-        .hero-description {
-          max-width: 650px;
-          margin: 30px auto 0;
-          color: #858585;
-          font-size: 18px;
-          line-height: 1.7;
-        }
-
-        .hero-buttons {
-          display: flex;
-          justify-content: center;
-          gap: 12px;
-          margin-top: 34px;
-          flex-wrap: wrap;
-        }
-
-        .button-primary,
-        .button-secondary {
-          text-decoration: none;
-          padding: 14px 21px;
-          border-radius: 100px;
-          font-size: 14px;
-          font-weight: 600;
-          transition:
-            transform 0.25s ease,
-            background 0.25s ease;
-        }
-
-        .button-primary {
-          background: white;
-          color: black;
-        }
-
-        .button-secondary {
-          color: white;
-          border: 1px solid rgba(255, 255, 255, 0.14);
-          background: rgba(255, 255, 255, 0.04);
-        }
-
-        .button-primary:hover,
-        .button-secondary:hover {
-          transform: translateY(-3px);
-        }
-
-        .button-secondary:hover {
-          background: rgba(255, 255, 255, 0.09);
-        }
-
-        .hero-proof {
-          margin-top: 55px;
-          color: #606060;
-          font-size: 12px;
-        }
-
-        .hero-proof strong {
-          color: #bcbcbc;
-        }
-
-        .ai-window-wrap {
-          position: relative;
-          margin: 70px auto 0;
-          width: min(920px, 100%);
-          perspective: 1000px;
-        }
-
-        .ai-window {
-          position: relative;
-          border: 1px solid rgba(255, 255, 255, 0.13);
-          border-radius: 22px;
-          background:
-            linear-gradient(
-              135deg,
-              rgba(255, 255, 255, 0.08),
-              rgba(255, 255, 255, 0.025)
-            ),
-            #090909;
-          box-shadow:
-            0 60px 120px rgba(0, 0, 0, 0.6),
-            0 0 100px rgba(80, 62, 255, 0.13);
-          overflow: hidden;
-          transform: rotateX(3deg);
-        }
-
-        .window-top {
-          height: 48px;
-          display: flex;
-          align-items: center;
-          gap: 7px;
-          padding: 0 16px;
-          border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-        }
-
-        .window-dot {
-          width: 8px;
-          height: 8px;
-          border-radius: 50%;
-          background: #454545;
-        }
-
-        .window-label {
-          margin-left: auto;
-          margin-right: auto;
-          color: #555;
-          font-size: 11px;
-        }
-
-        .window-body {
-          min-height: 360px;
-          padding: 38px;
-          display: grid;
-          grid-template-columns: 1.1fr 0.9fr;
-          gap: 30px;
-          text-align: left;
-        }
-
-        .dashboard-title {
-          font-size: 12px;
-          color: #676767;
-          margin-bottom: 12px;
-        }
-
-        .dashboard-heading {
-          font-size: 32px;
-          line-height: 1.1;
-          letter-spacing: -0.05em;
-          max-width: 400px;
-        }
-
-        .mini-chart {
-          margin-top: 30px;
-          height: 100px;
-          display: flex;
-          align-items: end;
-          gap: 7px;
-        }
-
-        .bar {
-          flex: 1;
-          border-radius: 5px 5px 0 0;
-          background: linear-gradient(to top, #4d3eff, #aaa4ff);
-          opacity: 0.8;
-          animation: barPulse 2.5s ease-in-out infinite alternate;
-        }
-
-        .bar:nth-child(1) {
-          height: 35%;
-        }
-        .bar:nth-child(2) {
-          height: 48%;
-          animation-delay: 0.2s;
-        }
-        .bar:nth-child(3) {
-          height: 42%;
-          animation-delay: 0.4s;
-        }
-        .bar:nth-child(4) {
-          height: 63%;
-          animation-delay: 0.6s;
-        }
-        .bar:nth-child(5) {
-          height: 55%;
-          animation-delay: 0.8s;
-        }
-        .bar:nth-child(6) {
-          height: 76%;
-          animation-delay: 1s;
-        }
-        .bar:nth-child(7) {
-          height: 91%;
-          animation-delay: 1.2s;
-        }
-
-        @keyframes barPulse {
-          from {
-            transform: scaleY(0.85);
-          }
-          to {
-            transform: scaleY(1);
-          }
-        }
-
-        .chat-preview {
-          border: 1px solid rgba(255, 255, 255, 0.09);
-          border-radius: 17px;
-          background: rgba(0, 0, 0, 0.3);
-          padding: 18px;
-          align-self: stretch;
-        }
-
-        .chat-header {
-          display: flex;
-          align-items: center;
-          gap: 10px;
-          padding-bottom: 15px;
-          border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-        }
-
-        .bot-avatar {
-          width: 32px;
-          height: 32px;
-          border-radius: 10px;
-          display: grid;
-          place-items: center;
-          background: linear-gradient(135deg, #6e60ff, #3024b8);
-          box-shadow: 0 0 25px rgba(90, 73, 255, 0.35);
-        }
-
-        .online {
-          color: #6bffaf;
-          font-size: 10px;
-        }
-
-        .message {
-          margin-top: 16px;
-          padding: 11px 13px;
-          border-radius: 13px;
-          background: rgba(255, 255, 255, 0.06);
-          color: #aaa;
-          font-size: 12px;
-          line-height: 1.6;
-          max-width: 88%;
-        }
-
-        .message.user {
-          margin-left: auto;
-          background: #5848ff;
-          color: white;
-        }
-
-        .section {
-          padding: 125px 0;
-        }
-
-        .section-border {
-          border-top: 1px solid rgba(255, 255, 255, 0.07);
-        }
-
-        .section-label {
-          color: #7468ff;
-          font-size: 11px;
-          text-transform: uppercase;
-          letter-spacing: 0.18em;
-          font-weight: 700;
-          margin-bottom: 17px;
-        }
-
-        .section-heading {
-          font-size: clamp(38px, 5vw, 66px);
-          line-height: 0.98;
-          letter-spacing: -0.065em;
-          max-width: 780px;
-          margin: 0;
-        }
-
-        .section-subtitle {
-          color: #777;
-          line-height: 1.7;
-          font-size: 16px;
-          max-width: 590px;
-          margin-top: 24px;
-        }
-
-        .services-grid {
-          display: grid;
-          grid-template-columns: repeat(3, 1fr);
-          gap: 12px;
-          margin-top: 65px;
-        }
-
-        .service-card {
-          min-height: 300px;
-          padding: 30px;
-          border: 1px solid rgba(255, 255, 255, 0.09);
-          border-radius: 20px;
-          background:
-            radial-gradient(
-              circle at 80% 10%,
-              rgba(87, 68, 255, 0.11),
-              transparent 35%
-            ),
-            rgba(255, 255, 255, 0.025);
-          transition:
-            transform 0.3s ease,
-            border-color 0.3s ease;
-          position: relative;
-          overflow: hidden;
-        }
-
-        .service-card:hover {
-          transform: translateY(-7px);
-          border-color: rgba(119, 105, 255, 0.35);
-        }
-
-        .service-number {
-          color: #505050;
-          font-size: 12px;
-          margin-bottom: 70px;
-        }
-
-        .service-icon {
-          font-size: 25px;
-          margin-bottom: 22px;
-        }
-
-        .service-card h3 {
-          margin: 0 0 11px;
-          font-size: 21px;
-          letter-spacing: -0.03em;
-        }
-
-        .service-card p {
-          margin: 0;
-          color: #777;
-          line-height: 1.65;
-          font-size: 14px;
-        }
-
-        .marquee {
-          border-top: 1px solid rgba(255, 255, 255, 0.07);
-          border-bottom: 1px solid rgba(255, 255, 255, 0.07);
-          overflow: hidden;
-          white-space: nowrap;
-          padding: 22px 0;
-        }
-
-        .marquee-track {
-          display: inline-flex;
-          gap: 50px;
-          animation: marquee 25s linear infinite;
-          color: #3e3e3e;
-          font-size: 13px;
-          text-transform: uppercase;
-          letter-spacing: 0.2em;
-        }
-
-        .marquee-track span:nth-child(even) {
-          color: #666;
-        }
-
-        @keyframes marquee {
-          to {
-            transform: translateX(-50%);
-          }
-        }
-
-        .process-grid {
-          display: grid;
-          grid-template-columns: repeat(4, 1fr);
-          gap: 12px;
-          margin-top: 65px;
-        }
-
-        .process-card {
-          padding: 28px;
-          min-height: 260px;
-          border-top: 1px solid rgba(255, 255, 255, 0.15);
-        }
-
-        .process-number {
-          font-size: 12px;
-          color: #7468ff;
-        }
-
-        .process-card h3 {
-          margin-top: 75px;
-          font-size: 22px;
-          letter-spacing: -0.04em;
-        }
-
-        .process-card p {
-          color: #707070;
-          line-height: 1.6;
-          font-size: 14px;
-        }
-
-        .feature-section {
-          background: #080808;
-        }
-
-        .feature-layout {
-          display: grid;
-          grid-template-columns: 0.9fr 1.1fr;
-          gap: 70px;
-          align-items: center;
-        }
-
-        .feature-visual {
-          min-height: 550px;
-          border-radius: 25px;
-          border: 1px solid rgba(255, 255, 255, 0.1);
-          background:
-            radial-gradient(
-              circle at 50% 45%,
-              rgba(87, 68, 255, 0.22),
-              transparent 32%
-            ),
-            #0a0a0a;
-          display: grid;
-          place-items: center;
-          position: relative;
-          overflow: hidden;
-        }
-
-        .orbit {
-          width: 300px;
-          height: 300px;
-          border: 1px solid rgba(123, 110, 255, 0.25);
-          border-radius: 50%;
-          position: absolute;
-          animation: rotate 15s linear infinite;
-        }
-
-        .orbit.two {
-          width: 430px;
-          height: 430px;
-          animation-direction: reverse;
-          animation-duration: 22s;
-        }
-
-        .orbit.three {
-          width: 560px;
-          height: 560px;
-          animation-duration: 30s;
-        }
-
-        .orbit-dot {
-          width: 10px;
-          height: 10px;
-          background: #867aff;
-          border-radius: 50%;
-          box-shadow: 0 0 25px #7769ff;
-          position: absolute;
-          top: -5px;
-          left: 50%;
-        }
-
-        @keyframes rotate {
-          to {
-            transform: rotate(360deg);
-          }
-        }
-
-        .feature-core {
-          width: 120px;
-          height: 120px;
-          border-radius: 35px;
-          background: linear-gradient(135deg, #8378ff, #3425bd);
-          display: grid;
-          place-items: center;
-          font-size: 45px;
-          box-shadow:
-            0 0 80px rgba(90, 74, 255, 0.4),
-            inset 0 1px rgba(255, 255, 255, 0.4);
-          position: relative;
-          z-index: 3;
-        }
-
-        .benefits {
-          margin-top: 42px;
-          display: grid;
-          gap: 18px;
-        }
-
-        .benefit {
-          display: flex;
-          gap: 15px;
-          align-items: flex-start;
-        }
-
-        .check {
-          width: 23px;
-          height: 23px;
-          border-radius: 50%;
-          display: grid;
-          place-items: center;
-          background: rgba(112, 99, 255, 0.14);
-          color: #8277ff;
-          font-size: 12px;
-          flex-shrink: 0;
-        }
-
-        .benefit strong {
-          display: block;
-          font-size: 14px;
-          margin-bottom: 4px;
-        }
-
-        .benefit span {
-          color: #707070;
-          font-size: 13px;
-          line-height: 1.5;
-        }
-
-        .currency-switch {
-          display: inline-flex;
-          margin-top: 28px;
-          padding: 4px;
-          border: 1px solid rgba(255, 255, 255, 0.1);
-          border-radius: 100px;
-          background: rgba(255, 255, 255, 0.03);
-        }
-
-        .currency-switch button {
-          border: none;
-          background: transparent;
-          color: #666;
-          padding: 8px 15px;
-          border-radius: 100px;
-          font-size: 11px;
-          font-weight: 600;
-          cursor: pointer;
-          transition:
-            background 0.2s ease,
-            color 0.2s ease;
-        }
-
-        .currency-switch button.currency-active {
-          background: white;
-          color: black;
-        }
-        .pricing-grid {
-        
-          display: grid;
-          grid-template-columns: repeat(3, 1fr);
-          gap: 12px;
-          margin-top: 65px;
-        }
-
-        .pricing-card {
-                .pricing-card-top {
-          position: relative;
-        }
-
-        .pricing-label {
-          display: inline-block;
-          color: #7468ff;
-          font-size: 10px;
-          text-transform: uppercase;
-          letter-spacing: 0.16em;
-          font-weight: 700;
-          margin-bottom: 12px;
-        }
-
-        .pricing-price {
-          display: flex;
-          align-items: baseline;
-          gap: 5px;
-          margin: 24px 0 4px;
-        }
-
-        .pricing-price .currency {
-          font-size: 18px;
-          color: #999;
-        }
-
-        .pricing-price .amount {
-          font-size: 52px;
-          line-height: 1;
-          letter-spacing: -0.06em;
-          font-weight: 700;
-        }
-
-        .pricing-price .price-note {
-          color: #666;
-          font-size: 11px;
-        }
-
-        .monthly-price {
-          margin: 8px 0 0;
-          color: #777;
-          font-size: 12px;
-        }
-
-        .pricing-divider {
-          height: 1px;
-          background: rgba(255, 255, 255, 0.08);
-          margin: 25px 0;
-        }
-
-        .pricing-button {
-          display: block;
-          text-align: center;
-          padding: 13px 16px;
-          border: 1px solid rgba(255, 255, 255, 0.12);
-          border-radius: 100px;
-          color: white;
-          text-decoration: none;
-          font-size: 13px;
-          font-weight: 600;
-          transition:
-            background 0.2s ease,
-            color 0.2s ease,
-            transform 0.2s ease;
-        }
-
-        .pricing-button:hover {
-          background: white;
-          color: black;
-          transform: translateY(-2px);
-        }
-
-        .pricing-button-primary {
-          background: white;
-          color: black;
-        }
-
-        .pricing-button-primary:hover {
-          background: #e9e6ff;
-        }
-
-        .pricing-featured {
-          background:
-            radial-gradient(
-              circle at 50% 0%,
-              rgba(91, 74, 255, 0.2),
-              transparent 45%
-            ),
-            rgba(255, 255, 255, 0.04);
-          border-color: rgba(111, 96, 255, 0.4);
-          position: relative;
-        }
-
-        .pricing-badge {
-          display: inline-block;
-          padding: 6px 10px;
-          margin-bottom: 18px;
-          border: 1px solid rgba(124, 112, 255, 0.3);
-          border-radius: 100px;
-          color: #8277ff;
-          background: rgba(112, 99, 255, 0.08);
-          font-size: 9px;
-          font-weight: 700;
-          letter-spacing: 0.12em;
-        }
-
-        .pricing-custom-price {
-          font-size: 42px;
-          font-weight: 700;
-          letter-spacing: -0.05em;
-          margin: 24px 0 6px;
-        }
-          padding: 34px;
-          border: 1px solid rgba(255, 255, 255, 0.09);
-          border-radius: 22px;
-          background: rgba(255, 255, 255, 0.025);
-        }
-
-        .pricing-card.featured {
-          background:
-            radial-gradient(
-              circle at 50% 0%,
-              rgba(91, 74, 255, 0.2),
-              transparent 45%
-            ),
-            rgba(255, 255, 255, 0.04);
-          border-color: rgba(111, 96, 255, 0.4);
-        }
-
-        .popular {
-          color: #8277ff;
-          font-size: 10px;
-          text-transform: uppercase;
-          letter-spacing: 0.15em;
-          margin-bottom: 25px;
-        }
-
-        .pricing-card h3 {
-          font-size: 21px;
-          margin: 0;
-        }
-
-        .price {
-          font-size: 44px;
-          letter-spacing: -0.06em;
-          font-weight: 700;
-          margin: 20px 0 8px;
-        }
-
-        .price small {
-          font-size: 12px;
-          color: #666;
-          letter-spacing: 0;
-        }
-
-        .pricing-description {
-          color: #6e6e6e;
-          font-size: 13px;
-          line-height: 1.5;
-          min-height: 40px;
-        }
-
-        .pricing-features {
-          margin: 30px 0;
-          padding: 0;
-          list-style: none;
-          display: grid;
-          gap: 13px;
-        }
-
-        .pricing-features li {
-          color: #999;
-          font-size: 13px;
-        }
-
-        .pricing-features li::before {
-          content: "✓";
-          color: #7c70ff;
-          margin-right: 9px;
-        }
-
-        .price-button {
-          display: block;
-          text-align: center;
-          padding: 12px;
-          border: 1px solid rgba(255, 255, 255, 0.12);
-          border-radius: 100px;
-          color: white;
-          text-decoration: none;
-          font-size: 13px;
-          transition: background 0.2s ease;
-        }
-
-        .price-button:hover {
-          background: white;
-          color: black;
-        }
-
-        .testimonials {
-          display: grid;
-          grid-template-columns: repeat(3, 1fr);
-          gap: 12px;
-          margin-top: 65px;
-        }
-
-        .testimonial {
-          padding: 30px;
-          border: 1px solid rgba(255, 255, 255, 0.08);
-          border-radius: 20px;
-          background: rgba(255, 255, 255, 0.025);
-        }
-
-        .stars {
-          color: #8d83ff;
-          letter-spacing: 4px;
-          font-size: 12px;
-        }
-
-        .testimonial p {
-          color: #a0a0a0;
-          line-height: 1.7;
-          font-size: 14px;
-          margin: 25px 0;
-        }
-
-        .person {
-          display: flex;
-          align-items: center;
-          gap: 11px;
-        }
-
-        .person-avatar {
-          width: 34px;
-          height: 34px;
-          border-radius: 50%;
-          background: linear-gradient(135deg, #777, #242424);
-        }
-
-        .person strong {
-          display: block;
-          font-size: 12px;
-        }
-
-        .person span {
-          color: #555;
-          font-size: 11px;
-        }
-                  .demo-buttons {
-          display: flex;
-          justify-content: center;
-          gap: 10px;
-          flex-wrap: wrap;
-          margin-top: 45px;
-        }
-
-        .demo-button {
-          padding: 11px 18px;
-          border: 1px solid rgba(255, 255, 255, 0.1);
-          border-radius: 100px;
-          background: rgba(255, 255, 255, 0.03);
-          color: #777;
-          font-size: 12px;
-          cursor: pointer;
-          transition:
-            background 0.2s ease,
-            color 0.2s ease,
-            transform 0.2s ease;
-        }
-
-        .demo-button:hover {
-          color: white;
-          transform: translateY(-2px);
-        }
-
-        .demo-button.active {
-          background: white;
-          color: black;
-        }
-
-        .demo-panel {
-          margin-top: 25px;
-          min-height: 330px;
-          padding: 45px;
-          border: 1px solid rgba(255, 255, 255, 0.1);
-          border-radius: 24px;
-          background:
-            radial-gradient(
-              circle at 10% 10%,
-              rgba(87, 68, 255, 0.14),
-              transparent 35%
-            ),
-            rgba(255, 255, 255, 0.025);
-          display: grid;
-          grid-template-columns: 110px 1fr;
-          gap: 30px;
-          align-items: center;
-        }
-
-        .demo-icon {
-          width: 90px;
-          height: 90px;
-          border-radius: 25px;
-          display: grid;
-          place-items: center;
-          background: rgba(255, 255, 255, 0.06);
-          border: 1px solid rgba(255, 255, 255, 0.09);
-          font-size: 38px;
-        }
-
-        .demo-label {
-          color: #7468ff;
-          font-size: 10px;
-          font-weight: 700;
-          letter-spacing: 0.18em;
-          margin-bottom: 12px;
-        }
-
-        .demo-content h3 {
-          margin: 0;
-          font-size: 30px;
-          line-height: 1.08;
-          letter-spacing: -0.05em;
-          max-width: 700px;
-        }
-
-        .demo-content p {
-          color: #777;
-          line-height: 1.7;
-          font-size: 14px;
-          max-width: 700px;
-          margin: 18px 0 0;
-        }
-
-        .demo-points {
-          display: flex;
-          flex-wrap: wrap;
-          gap: 10px 20px;
-          margin-top: 25px;
-        }
-
-        .demo-points span {
-          color: #aaa;
-          font-size: 12px;
-        }
-
-        .demo-cta {
-          text-align: center;
-          margin-top: 35px;
-        }
-
-        .demo-cta p {
-          color: #666;
-          font-size: 13px;
-          margin-bottom: 16px;
-        }
-        .showcase-grid {
-          display: grid;
-          grid-template-columns: repeat(3, 1fr);
-          gap: 12px;
-          margin-top: 60px;
-        }
-
-        .showcase-card {
-          padding: 26px;
-          border: 1px solid rgba(255, 255, 255, 0.09);
-          border-radius: 22px;
-          background:
-            radial-gradient(
-              circle at 90% 0%,
-              rgba(87, 68, 255, 0.1),
-              transparent 35%
-            ),
-            rgba(255, 255, 255, 0.025);
-          transition:
-            transform 0.3s ease,
-            border-color 0.3s ease;
-        }
-
-        .showcase-card:hover {
-          transform: translateY(-6px);
-          border-color: rgba(119, 105, 255, 0.35);
-        }
-
-        .showcase-top {
-          display: flex;
-          align-items: center;
-          justify-content: space-between;
-        }
-
-        .showcase-icon {
-          width: 46px;
-          height: 46px;
-          display: grid;
-          place-items: center;
-          border-radius: 14px;
-          background: rgba(255, 255, 255, 0.06);
-          font-size: 21px;
-        }
-
-        .showcase-status {
-          color: #6bffaf;
-          font-size: 9px;
-          letter-spacing: 0.12em;
-          font-weight: 700;
-        }
-
-        .showcase-label {
-          color: #7468ff;
-          font-size: 9px;
-          letter-spacing: 0.16em;
-          font-weight: 700;
-          margin-top: 24px;
-        }
-
-        .showcase-card h3 {
-          margin: 9px 0 10px;
-          font-size: 22px;
-          letter-spacing: -0.04em;
-        }
-
-        .showcase-card > p {
-          color: #727272;
-          font-size: 13px;
-          line-height: 1.65;
-          min-height: 63px;
-        }
-
-        .showcase-chat {
-          margin-top: 24px;
-          padding: 15px;
-          border: 1px solid rgba(255, 255, 255, 0.07);
-          border-radius: 16px;
-          background: rgba(0, 0, 0, 0.25);
-        }
-
-        .showcase-message {
-          width: fit-content;
-          max-width: 90%;
-          padding: 9px 11px;
-          margin-bottom: 9px;
-          border-radius: 11px;
-          background: rgba(255, 255, 255, 0.06);
-          color: #aaa;
-          font-size: 11px;
-          line-height: 1.5;
-        }
-
-        .showcase-message:last-child {
-          margin-bottom: 0;
-        }
-
-        .showcase-message.user {
-          margin-left: auto;
-          background: #5848ff;
-          color: white;
-        }
-
-        .showcase-button {
-          display: block;
-          margin-top: 20px;
-          padding: 12px;
-          text-align: center;
-          border: 1px solid rgba(255, 255, 255, 0.12);
-          border-radius: 100px;
-          color: white;
-          text-decoration: none;
-          font-size: 12px;
-          font-weight: 600;
-          transition:
-            background 0.2s ease,
-            color 0.2s ease;
-        }
-
-        .showcase-button:hover {
-          background: white;
-          color: black;
-        }
-        .faq-wrap {
-          max-width: 820px;
-          margin: 60px auto 0;
-        }
-
-        .faq {
-          border-top: 1px solid rgba(255, 255, 255, 0.09);
-        }
-
-        .faq:last-child {
-          border-bottom: 1px solid rgba(255, 255, 255, 0.09);
-        }
-
-        .faq-question {
-          width: 100%;
-          background: none;
-          border: none;
-          color: white;
-          text-align: left;
-          padding: 24px 0;
-          display: flex;
-          justify-content: space-between;
-          align-items: center;
-          cursor: pointer;
-          font-size: 16px;
-        }
-
-        .faq-plus {
-          color: #666;
-          font-size: 20px;
-          transition: transform 0.25s ease;
-        }
-
-        .faq-plus.open {
-          transform: rotate(45deg);
-        }
-
-        .faq-answer {
-          color: #707070;
-          line-height: 1.7;
-          font-size: 14px;
-          max-width: 700px;
-          padding: 0 0 24px;
-        }
-
-        .cta {
-          position: relative;
-          text-align: center;
-          padding: 130px 20px;
-          border-top: 1px solid rgba(255, 255, 255, 0.08);
-          overflow: hidden;
-        }
-
-        .cta::before {
-          content: "";
-          position: absolute;
-          width: 700px;
-          height: 350px;
-          border-radius: 50%;
-          background: rgba(81, 63, 255, 0.16);
-          filter: blur(100px);
-          top: 20%;
-          left: 50%;
-          transform: translateX(-50%);
-        }
-
-        .cta-content {
-          position: relative;
-          z-index: 2;
-        }
-
-        .cta h2 {
-          max-width: 850px;
-          margin: 0 auto;
-          font-size: clamp(45px, 7vw, 82px);
-          line-height: 0.94;
-          letter-spacing: -0.075em;
-        }
-
-        .cta p {
-          color: #747474;
-          max-width: 520px;
-          margin: 25px auto;
-          line-height: 1.7;
-        }
-
-        .footer {
-          border-top: 1px solid rgba(255, 255, 255, 0.08);
-          padding: 40px 0;
-        }
-
-        .footer-inner {
-          display: flex;
-          justify-content: space-between;
-          align-items: center;
-          gap: 20px;
-        }
-
-        .footer-copy {
-          color: #505050;
-          font-size: 12px;
-        }
-
-        .footer-links {
-          display: flex;
-          gap: 20px;
-        }
-
-        .footer-links a {
-          color: #666;
-          text-decoration: none;
-          font-size: 12px;
-        }
-
-        @media (max-width: 900px) {
-          .nav-links,
-          .nav-cta {
-            display: none;
-                      .showcase-grid {
-            grid-template-columns: 1fr 1fr;
-          }
-          }
-
-          .mobile-button {
-            display: block;
-          }
-
-          .window-body {
-            grid-template-columns: 1fr;
-          }
-
-          .chat-preview {
-            display: none;
-          }
-
-          .services-grid,
-          .pricing-grid,
-          .testimonials {
-            grid-template-columns: 1fr 1fr;
-          }
-
-          .process-grid {
-            grid-template-columns: 1fr 1fr;
-          }
-
-          .feature-layout {
-            grid-template-columns: 1fr;
-          }
-        }
-
-        @media (max-width: 600px) {
-          .container {
-            width: min(100% - 28px, 1180px);
-                      .showcase-grid {
-            grid-template-columns: 1fr;
-          }
-          }
-
-          .hero {
-            min-height: 760px;
-            padding-top: 80px;
-          }
-
-          .hero h1 {
-            font-size: 54px;
-          }
-
-          .hero-description {
-            font-size: 15px;
-          }
-
-          .ai-window {
-            border-radius: 16px;
-          }
-
-          .window-body {
-            min-height: 300px;
-            padding: 25px;
-          }
-
-          .dashboard-heading {
-            font-size: 26px;
-          }
-
-          .services-grid,
-          .pricing-grid,
-          .testimonials,
-          .process-grid {
-            grid-template-columns: 1fr;
-          }
-
-          .section {
-            padding: 85px 0;
-          }
-
-          .feature-visual {
-            min-height: 390px;
-          }
-
-          .orbit {
-            width: 210px;
-            height: 210px;
-          }
-
-          .orbit.two {
-            width: 300px;
-            height: 300px;
-          }
-
-          .orbit.three {
-            width: 390px;
-            height: 390px;
-          }
-
-          .feature-core {
-            width: 90px;
-            height: 90px;
-            border-radius: 26px;
-            font-size: 32px;
-          }
-
-          .footer-inner {
-            flex-direction: column;
-            align-items: flex-start;
-          }
-        }
-      `}</style>
-
-      <div className="nexa-page">
-        {/* NAVIGATION */}
-        <div className="container">
-          <nav className="nav">
-            <a href="#" className="logo">
-              <span className="logo-mark" />
-              NexaBot
+      <main className="site">
+        {/* NAVBAR */}
+        <nav className="navbar">
+          <a href="#" className="logo">
+            <span className="logoMark">✦</span>
+            <span>NexaBot</span>
+            <small>AGENCY</small>
+          </a>
+
+          <div className={`navLinks ${menuOpen ? "open" : ""}`}>
+            <a href="#services" onClick={() => setMenuOpen(false)}>
+              Services
             </a>
+            <a href="#how-it-works" onClick={() => setMenuOpen(false)}>
+              How It Works
+            </a>
+            <a href="#who-its-for" onClick={() => setMenuOpen(false)}>
+              Who It's For
+            </a>
+            <a href="#pricing" onClick={() => setMenuOpen(false)}>
+              Pricing
+            </a>
+            <a href="#faq" onClick={() => setMenuOpen(false)}>
+              FAQ
+            </a>
+          </div>
 
-            <div className="nav-links">
-              <a href="#services">Services</a>
-              <a href="#process">Process</a>
-              <a href="#results">Why NexaBot</a>
-              <a href="#pricing">Pricing</a>
-              <a href="#faq">FAQ</a>
-            </div>
-<a
-  href="https://wa.me/2349018324277?text=Hi%20NexaBot%20Agency!%20I'm%20interested%20in%20your%20AI%20chatbot%20services."
-  target="_blank"
-  rel="noopener noreferrer"
-  className="nav-cta"
->
-  Book a Demo
-</a>
+          <a href="#contact" className="navCta">
+            Book a Demo <span>↗</span>
+          </a>
 
-            <button
-              className="mobile-button"
-              onClick={() => setMenuOpen(!menuOpen)}
-              aria-label="Open menu"
-            >
-              {menuOpen ? "×" : "☰"}
-            </button>
-
-            {menuOpen && (
-              <div className="mobile-menu">
-                <a href="#services" onClick={() => setMenuOpen(false)}>
-                  Services
-                </a>
-                <a href="#process" onClick={() => setMenuOpen(false)}>
-                  Process
-                </a>
-                <a href="#results" onClick={() => setMenuOpen(false)}>
-                  Why NexaBot
-                </a>
-                <a href="#pricing" onClick={() => setMenuOpen(false)}>
-                  Pricing
-                </a>
-                <a href="#faq" onClick={() => setMenuOpen(false)}>
-                  FAQ
-                </a>
-              <a
-  href="https://wa.me/2349018324277?text=Hi%20NexaBot%20Agency!%20I'm%20interested%20in%20booking%20a%20demo."
-  target="_blank"
-  rel="noopener noreferrer"
-  onClick={() => setMenuOpen(false)}
->
-  Book a Demo
-</a>
-              </div>
-            )}
-          </nav>
-        </div>
+          <button
+            className="menuButton"
+            onClick={() => setMenuOpen(!menuOpen)}
+            aria-label="Toggle menu"
+          >
+            {menuOpen ? "×" : "☰"}
+          </button>
+        </nav>
 
         {/* HERO */}
         <section className="hero">
-          <div className="hero-grid" />
-          <div className="hero-orb" />
+          <div className="heroGlow glowOne" />
+          <div className="heroGlow glowTwo" />
 
-          <div className="container">
-            <div className="hero-content">
-              <div className="eyebrow">
-                <span className="eyebrow-dot" />
-                AI AUTOMATION FOR MODERN BUSINESSES
+          <div className="heroContent">
+            <div className="eyebrow">
+              <span className="pulseDot" />
+              AI CUSTOMER AUTOMATION
+            </div>
+
+            <h1>
+              Turn Customer Questions Into{" "}
+              <span>More Sales</span> — Automatically.
+            </h1>
+
+            <p className="heroSub">
+              Your business doesn't sleep.
+              <br />
+              <strong>Neither should your customer support.</strong>
+            </p>
+
+            <p className="heroDescription">
+              NexaBot answers customer questions, captures enquiries and helps
+              your team follow up — 24/7.
+            </p>
+
+            <div className="heroActions">
+              <a href="#contact" className="primaryButton">
+                Get Your AI Assistant <span>→</span>
+              </a>
+
+              <a href="#demo" className="secondaryButton">
+                See How It Works <span>↓</span>
+              </a>
+            </div>
+
+            <div className="heroTrust">
+              <div>
+                <span>✦</span>
+                24/7 Customer Response
               </div>
-
-              <h1>
-                Your business.
-                <br />
-                <span className="gradient-text">Powered by AI.</span>
-              </h1>
-
-              <p className="hero-description">
-                We build intelligent AI systems that turn conversations into
-                customers, automate repetitive work, and help businesses
-                operate around the clock.
-              </p>
-
-              <div className="hero-buttons">
-               <a
-  href="https://wa.me/2349018324277?text=Hi%20NexaBot%20Agency!%20I'd%20like%20to%20start%20an%20AI%20project."
-  target="_blank"
-  rel="noopener noreferrer"
-  className="button-primary"
->
-  Start a Project →
-</a>
-
-                <a href="#services" className="button-secondary">
-                  Explore Solutions
-                </a>
-                <button
-  type="button"
-  className="button-secondary"
-  onClick={() =>
-    window.dispatchEvent(new Event("open-nexabot-chat"))
-  }
->
-  Talk to NexaBot ✦
-</button>
+              <div>
+                <span>✦</span>
+                Qualified Enquiries
               </div>
-
-              <div className="hero-proof">
-                Built for <strong>e-commerce</strong> ·{" "}
-                <strong>real estate</strong> ·{" "}
-                <strong>consulting</strong> ·{" "}
-                <strong>modern businesses</strong>
+              <div>
+                <span>✦</span>
+                WhatsApp Follow-up
               </div>
+            </div>
+          </div>
 
-              {/* AI DASHBOARD */}
-              <div className="ai-window-wrap">
-                <div className="ai-window">
-                  <div className="window-top">
-                    <span className="window-dot" />
-                    <span className="window-dot" />
-                    <span className="window-dot" />
-                    <span className="window-label">
-                      nexabot.ai / dashboard
+          {/* HERO CHAT DEMO */}
+          <div className="heroVisual">
+            <div className="visualOrb orbOne" />
+            <div className="visualOrb orbTwo" />
+
+            <div className="chatWindow">
+              <div className="chatHeader">
+                <div className="botIdentity">
+                  <div className="botAvatar">✦</div>
+                  <div>
+                    <strong>NexaBot</strong>
+                    <span>
+                      <i /> Online
                     </span>
                   </div>
+                </div>
 
-                  <div className="window-body">
-                    <div>
-                      <div className="dashboard-title">
-                        AI PERFORMANCE OVERVIEW
-                      </div>
+                <div className="headerDots">•••</div>
+              </div>
 
-                      <div className="dashboard-heading">
-                        Your AI never takes a coffee break.
-                      </div>
+              <div className="chatBody">
+                <div className="chatLabel">TODAY · CUSTOMER ENQUIRY</div>
 
-                      <div className="mini-chart">
-                        <span className="bar" />
-                        <span className="bar" />
-                        <span className="bar" />
-                        <span className="bar" />
-                        <span className="bar" />
-                        <span className="bar" />
-                        <span className="bar" />
-                      </div>
-                    </div>
+                <div className="message customer">
+                  <span className="messageTag">CUSTOMER</span>
+                  <p>
+                    Is the 3-bedroom apartment in Lekki still available?
+                  </p>
+                </div>
 
-                    <div className="chat-preview">
-                      <div className="chat-header">
-                        <div className="bot-avatar">✦</div>
-                        <div>
-                          <div style={{ fontSize: "12px" }}>NexaBot AI</div>
-                          <div className="online">● Online</div>
-                        </div>
-                      </div>
-
-                      <div className="message">
-                        Hi! 👋 How can I help you today?
-                      </div>
-
-                      <div className="message user">
-                        I want to learn about your services.
-                      </div>
-
-                      <div className="message">
-                        Absolutely. I can explain our AI automation solutions
-                        or help you book a consultation.
-                      </div>
-                    </div>
+                <div className="message bot">
+                  <div className="botMini">✦</div>
+                  <div>
+                    <span className="messageTag">NEXABOT</span>
+                    <p>
+                      Yes. It's currently available. What's your preferred
+                      budget?
+                    </p>
                   </div>
                 </div>
+
+                <div className="message customer short">
+                  <span className="messageTag">CUSTOMER</span>
+                  <p>₦100m–₦120m.</p>
+                </div>
+
+                <div className="message bot">
+                  <div className="botMini">✦</div>
+                  <div>
+                    <span className="messageTag">NEXABOT</span>
+                    <p>
+                      Great. May I get your name and WhatsApp number so our
+                      team can assist you?
+                    </p>
+                  </div>
+                </div>
+
+                <div className="qualification">
+                  <div className="checkCircle">✓</div>
+                  <div>
+                    <strong>Qualified enquiry</strong>
+                    <span>Ready for team follow-up</span>
+                  </div>
+                </div>
+              </div>
+
+              <div className="chatInput">
+                <span>Type your message...</span>
+                <button>↑</button>
+              </div>
+            </div>
+
+            <div className="floatingCard responseCard">
+              <span className="cardIcon">⚡</span>
+              <div>
+                <strong>Instant response</strong>
+                <small>Customer answered in seconds</small>
+              </div>
+            </div>
+
+            <div className="floatingCard leadCard">
+              <span className="cardIcon">✓</span>
+              <div>
+                <strong>Enquiry captured</strong>
+                <small>Customer requirements collected</small>
               </div>
             </div>
           </div>
@@ -1706,195 +213,523 @@ const [currency, setCurrency] = useState<"NGN" | "USD">("NGN");
 
         {/* MARQUEE */}
         <div className="marquee">
-          <div className="marquee-track">
-            <span>AI AUTOMATION</span>
-            <span>✦</span>
-            <span>SMARTER SUPPORT</span>
-            <span>✦</span>
-            <span>LEAD GENERATION</span>
-            <span>✦</span>
-            <span>24/7 INTELLIGENCE</span>
-            <span>✦</span>
-            <span>AI AUTOMATION</span>
-            <span>✦</span>
-            <span>SMARTER SUPPORT</span>
-            <span>✦</span>
-            <span>LEAD GENERATION</span>
-            <span>✦</span>
-            <span>24/7 INTELLIGENCE</span>
+          <div className="marqueeTrack">
+            <span>AI CUSTOMER SUPPORT</span>
+            <b>✦</b>
+            <span>LEAD QUALIFICATION</span>
+            <b>✦</b>
+            <span>24/7 AUTOMATION</span>
+            <b>✦</b>
+            <span>SMART ENQUIRIES</span>
+            <b>✦</b>
+            <span>WHATSAPP FOLLOW-UP</span>
+            <b>✦</b>
+            <span>AI CUSTOMER SUPPORT</span>
+            <b>✦</b>
+            <span>LEAD QUALIFICATION</span>
+            <b>✦</b>
+            <span>24/7 AUTOMATION</span>
           </div>
         </div>
 
-        {/* SERVICES */}
-        <section id="services" className="section">
-          <div className="container">
-            <div className="section-label">What we build</div>
-
-            <h2 className="section-heading">
-              AI systems designed to move your business forward.
+        {/* MONEY OUTCOME */}
+        <section className="outcomeSection">
+          <div className="sectionHeader center">
+            <div className="eyebrow">THE PROBLEM</div>
+            <h2>
+              Every unanswered enquiry is a{" "}
+              <span>potential customer</span> walking away.
             </h2>
-
-            <p className="section-subtitle">
-              NexaBot combines conversational AI, automation, and thoughtful
-              user experiences to help businesses reduce manual work and
-              create better customer experiences.
+            <p>
+              Customers don't always wait. When they ask a question and nobody
+              responds, they can simply move on to the next business.
             </p>
+          </div>
 
-            <div className="services-grid">
-              {[
-                [
-                  "01",
-                  "✦",
-                  "AI Customer Support",
-                  "Give customers instant, intelligent answers without making them wait for your team.",
-                ],
-                [
-                  "02",
-                  "◎",
-                  "Lead Generation",
-                  "Capture potential customers directly from your website and turn conversations into opportunities.",
-                ],
-                [
-                  "03",
-                  "◌",
-                  "Appointment Booking",
-                  "Let prospects schedule calls and appointments without unnecessary back-and-forth.",
-                ],
-                [
-                  "04",
-                  "↗",
-                  "Sales Automation",
-                  "Qualify prospects and guide them toward the right product, service, or next step.",
-                ],
-                [
-                  "05",
-                  "⌁",
-                  "Business Knowledge",
-                  "Give your AI the information it needs to answer questions consistently and accurately.",
-                ],
-                [
-                  "06",
-                  "∞",
-                  "Custom AI Systems",
-                  "Build tailored AI workflows around the way your business actually operates.",
-                ],
-              ].map(([number, icon, title, description]) => (
-                <div className="service-card" key={number}>
-                  <div className="service-number">{number}</div>
-                  <div className="service-icon">{icon}</div>
-                  <h3>{title}</h3>
-                  <p>{description}</p>
+          <div className="comparison">
+            <div className="comparisonCard missed">
+              <div className="comparisonTop">
+                <span className="comparisonIcon">×</span>
+                <span>WITHOUT NEXABOT</span>
+              </div>
+
+              <h3>Missed enquiry</h3>
+
+              <div className="flow">
+                <div>
+                  <strong>Customer asks</strong>
+                  <span>Interested in your service</span>
                 </div>
-              ))}
+                <i>→</i>
+                <div>
+                  <strong>Nobody responds</strong>
+                  <span>Customer waits</span>
+                </div>
+                <i>→</i>
+                <div>
+                  <strong>Customer leaves</strong>
+                  <span>Opportunity lost</span>
+                </div>
+              </div>
+            </div>
+
+            <div className="comparisonCard solved">
+              <div className="comparisonTop">
+                <span className="comparisonIcon">✓</span>
+                <span>WITH NEXABOT</span>
+              </div>
+
+              <h3>Customer enquiry captured</h3>
+
+              <div className="flow">
+                <div>
+                  <strong>Customer asks</strong>
+                  <span>Interested in your service</span>
+                </div>
+                <i>→</i>
+                <div>
+                  <strong>Immediate response</strong>
+                  <span>Question answered</span>
+                </div>
+                <i>→</i>
+                <div>
+                  <strong>Requirements collected</strong>
+                  <span>Team follows up</span>
+                </div>
+              </div>
             </div>
           </div>
         </section>
 
-        {/* PROCESS */}
-        <section id="process" className="section section-border">
-          <div className="container">
-            <div className="section-label">How it works</div>
-
-            <h2 className="section-heading">
-              From conversation to automation.
+        {/* ENQUIRY JOURNEY */}
+        <section className="journeySection" id="demo">
+          <div className="sectionHeader center">
+            <div className="eyebrow">FROM QUESTION TO OPPORTUNITY</div>
+            <h2>
+              From question to <span>qualified enquiry.</span>
             </h2>
+            <p>
+              NexaBot doesn't just answer questions. It helps move the
+              conversation toward the next step.
+            </p>
+          </div>
 
-            <p className="section-subtitle">
-              We keep the process simple. You tell us what your business needs;
-              we turn it into an intelligent system.
+          <div className="journeyGrid">
+            <div className="journeyCard">
+              <span className="stepNumber">01</span>
+              <div className="journeyIcon">?</div>
+              <h3>ASK</h3>
+              <p>
+                A customer asks about your product, service, price, location
+                or availability.
+              </p>
+            </div>
+
+            <div className="journeyLine">→</div>
+
+            <div className="journeyCard">
+              <span className="stepNumber">02</span>
+              <div className="journeyIcon">✦</div>
+              <h3>ANSWER</h3>
+              <p>
+                NexaBot responds immediately with helpful information based on
+                your business.
+              </p>
+            </div>
+
+            <div className="journeyLine">→</div>
+
+            <div className="journeyCard">
+              <span className="stepNumber">03</span>
+              <div className="journeyIcon">◉</div>
+              <h3>QUALIFY</h3>
+              <p>
+                The conversation can collect the details your team needs to
+                understand the enquiry.
+              </p>
+            </div>
+
+            <div className="journeyLine">→</div>
+
+            <div className="journeyCard">
+              <span className="stepNumber">04</span>
+              <div className="journeyIcon">↗</div>
+              <h3>FOLLOW UP</h3>
+              <p>
+                Your team receives a clearer enquiry and can continue the
+                conversation.
+              </p>
+            </div>
+          </div>
+        </section>
+
+        {/* SERVICES */}
+        <section className="servicesSection" id="services">
+          <div className="sectionHeader">
+            <div>
+              <div className="eyebrow">WHAT WE DO</div>
+              <h2>
+                Customer support that works{" "}
+                <span>while you focus on business.</span>
+              </h2>
+            </div>
+
+            <p>
+              We build practical AI assistants around the questions your
+              customers already ask every day.
+            </p>
+          </div>
+
+          <div className="servicesGrid">
+            <div className="serviceCard large">
+              <div className="serviceNumber">01</div>
+              <div className="serviceIcon">✦</div>
+              <h3>AI Website Chatbots</h3>
+              <p>
+                Give visitors an immediate way to ask questions and start an
+                enquiry directly from your website.
+              </p>
+              <div className="serviceVisual">
+                <span>“Do you have this property available?”</span>
+                <span>“Yes. Let me help you with that.”</span>
+              </div>
+            </div>
+
+            <div className="serviceCard">
+              <div className="serviceNumber">02</div>
+              <div className="serviceIcon">◎</div>
+              <h3>Lead Qualification</h3>
+              <p>
+                Collect useful customer information before your team takes
+                over the conversation.
+              </p>
+            </div>
+
+            <div className="serviceCard">
+              <div className="serviceNumber">03</div>
+              <div className="serviceIcon">↗</div>
+              <h3>WhatsApp Follow-up</h3>
+              <p>
+                Move interested customers toward a direct conversation with
+                your business.
+              </p>
+            </div>
+
+            <div className="serviceCard">
+              <div className="serviceNumber">04</div>
+              <div className="serviceIcon">⌁</div>
+              <h3>Business Knowledge</h3>
+              <p>
+                Build the assistant around your services, FAQs, products,
+                locations and customer needs.
+              </p>
+            </div>
+
+            <div className="serviceCard">
+              <div className="serviceNumber">05</div>
+              <div className="serviceIcon">◌</div>
+              <h3>Customer Automation</h3>
+              <p>
+                Reduce repetitive questions so your team can spend more time
+                on serious enquiries and customers.
+              </p>
+            </div>
+          </div>
+        </section>
+
+        {/* WHO ITS FOR */}
+        <section className="industriesSection" id="who-its-for">
+          <div className="sectionHeader center">
+            <div className="eyebrow">WHO IT'S FOR</div>
+            <h2>
+              Built for businesses that receive{" "}
+              <span>customer enquiries.</span>
+            </h2>
+            <p>
+              If customers regularly ask questions before buying, NexaBot can
+              help you respond faster.
+            </p>
+          </div>
+
+          <div className="industryGrid">
+            <div className="industryCard">
+              <div className="industryImage realEstate">
+                <span>⌂</span>
+              </div>
+              <div className="industryContent">
+                <span>01</span>
+                <h3>Real Estate</h3>
+                <p>
+                  Answer property questions, collect requirements and help
+                  agents identify serious prospects.
+                </p>
+                <a href="#contact">Explore solution →</a>
+              </div>
+            </div>
+
+            <div className="industryCard">
+              <div className="industryImage ecommerce">
+                <span>◈</span>
+              </div>
+              <div className="industryContent">
+                <span>02</span>
+                <h3>E-commerce</h3>
+                <p>
+                  Help shoppers with products, availability, pricing and
+                  common buying questions.
+                </p>
+                <a href="#contact">Explore solution →</a>
+              </div>
+            </div>
+
+            <div className="industryCard">
+              <div className="industryImage consultancy">
+                <span>◇</span>
+              </div>
+              <div className="industryContent">
+                <span>03</span>
+                <h3>Consultancies</h3>
+                <p>
+                  Help potential clients understand your services and begin
+                  the enquiry process.
+                </p>
+                <a href="#contact">Explore solution →</a>
+              </div>
+            </div>
+
+            <div className="industryCard">
+              <div className="industryImage auto">
+                <span>◆</span>
+              </div>
+              <div className="industryContent">
+                <span>04</span>
+                <h3>Automotive</h3>
+                <p>
+                  Answer questions about vehicles, services, availability and
+                  customer enquiries.
+                </p>
+                <a href="#contact">Explore solution →</a>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* HOW IT WORKS */}
+        <section className="processSection" id="how-it-works">
+          <div className="processIntro">
+            <div className="eyebrow">HOW IT WORKS</div>
+            <h2>
+              Simple for your customers.
+              <br />
+              <span>Powerful for your business.</span>
+            </h2>
+            <p>
+              We handle the technical setup. You provide the business
+              information. Your customers get a helpful assistant.
             </p>
 
-            <div className="process-grid">
-              {[
-                [
-                  "01",
-                  "Discover",
-                  "We understand your business, customers, goals, and repetitive tasks.",
-                ],
-                [
-                  "02",
-                  "Design",
-                  "We map the conversations and workflows your AI needs to handle.",
-                ],
-                [
-                  "03",
-                  "Build",
-                  "We create and configure your AI system around your requirements.",
-                ],
-                [
-                  "04",
-                  "Launch",
-                  "Your AI goes live and starts working alongside your team.",
-                ],
-              ].map(([number, title, description]) => (
-                <div className="process-card" key={number}>
-                  <div className="process-number">{number}</div>
-                  <h3>{title}</h3>
-                  <p>{description}</p>
-                </div>
-              ))}
+            <a href="#contact" className="outlineButton">
+              Talk to NexaBot <span>→</span>
+            </a>
+          </div>
+
+          <div className="processSteps">
+            <div className="processStep">
+              <div className="processStepNumber">01</div>
+              <div>
+                <h3>Understand your business</h3>
+                <p>
+                  We learn about your products, services, customers and common
+                  questions.
+                </p>
+              </div>
+            </div>
+
+            <div className="processStep">
+              <div className="processStepNumber">02</div>
+              <div>
+                <h3>Build your AI assistant</h3>
+                <p>
+                  NexaBot is configured around your business information and
+                  customer journey.
+                </p>
+              </div>
+            </div>
+
+            <div className="processStep">
+              <div className="processStepNumber">03</div>
+              <div>
+                <h3>Connect it to your website</h3>
+                <p>
+                  Customers can interact with your assistant directly from
+                  your website.
+                </p>
+              </div>
+            </div>
+
+            <div className="processStep">
+              <div className="processStepNumber">04</div>
+              <div>
+                <h3>Start capturing enquiries</h3>
+                <p>
+                  Your customers get answers while your team gets better
+                  opportunities to follow up.
+                </p>
+              </div>
             </div>
           </div>
         </section>
 
         {/* WHY NEXABOT */}
-        <section id="results" className="section feature-section">
-          <div className="container">
-            <div className="feature-layout">
-              <div className="feature-visual">
-                <div className="orbit">
-                  <div className="orbit-dot" />
-                </div>
-                <div className="orbit two">
-                  <div className="orbit-dot" />
-                </div>
-                <div className="orbit three">
-                  <div className="orbit-dot" />
-                </div>
+        <section className="whySection">
+          <div className="whyVisual">
+            <div className="gridSphere">
+              <div className="sphereCore">✦</div>
+              <div className="orbit orbitA" />
+              <div className="orbit orbitB" />
+              <div className="orbit orbitC" />
+            </div>
 
-                <div className="feature-core">✦</div>
+            <div className="whyFloating topFloat">
+              <strong>24/7</strong>
+              <span>Always available</span>
+            </div>
+
+            <div className="whyFloating bottomFloat">
+              <strong>FAST</strong>
+              <span>Instant responses</span>
+            </div>
+          </div>
+
+          <div className="whyContent">
+            <div className="eyebrow">WHY NEXABOT</div>
+            <h2>
+              Your team shouldn't have to answer the{" "}
+              <span>same questions all day.</span>
+            </h2>
+
+            <p>
+              NexaBot handles repetitive customer conversations so your team
+              can focus on the enquiries that actually need a human.
+            </p>
+
+            <div className="benefits">
+              <div>
+                <span>✓</span>
+                <div>
+                  <strong>Respond instantly</strong>
+                  <p>Customers don't have to wait for a reply.</p>
+                </div>
               </div>
 
               <div>
-                <div className="section-label">Why NexaBot</div>
+                <span>✓</span>
+                <div>
+                  <strong>Never miss a late-night enquiry</strong>
+                  <p>Your assistant keeps working outside business hours.</p>
+                </div>
+              </div>
 
-                <h2 className="section-heading">
-                  Your next employee might be artificial.
-                </h2>
+              <div>
+                <span>✓</span>
+                <div>
+                  <strong>Give your team better enquiries</strong>
+                  <p>Collect useful information before follow-up.</p>
+                </div>
+              </div>
 
-                <p className="section-subtitle">
-                  The best AI isn't about replacing your team. It's about
-                  giving your team leverage — handling repetitive
-                  conversations while people focus on higher-value work.
-                </p>
+              <div>
+                <span>✓</span>
+                <div>
+                  <strong>Reduce repetitive work</strong>
+                  <p>Let AI handle common questions automatically.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
 
-                <div className="benefits">
-                  {[
-                    [
-                      "24/7 availability",
-                      "Your AI keeps conversations moving even outside business hours.",
-                    ],
-                    [
-                      "Consistent answers",
-                      "Customers receive clear responses based on your business knowledge.",
-                    ],
-                    [
-                      "More opportunities",
-                      "Capture leads at the moment someone is interested.",
-                    ],
-                    [
-                      "Less repetitive work",
-                      "Automate routine questions so your team can focus elsewhere.",
-                    ],
-                  ].map(([title, text]) => (
-                    <div className="benefit" key={title}>
-                      <div className="check">✓</div>
-                      <div>
-                        <strong>{title}</strong>
-                        <span>{text}</span>
-                      </div>
+        {/* KLEMZ CASE STUDY */}
+        <section className="caseStudySection">
+          <div className="caseStudyCard">
+            <div className="caseStudyContent">
+              <div className="eyebrow">OUR FIRST EXAMPLE</div>
+              <h2>
+                Klemz <span>Autos</span>
+              </h2>
+
+              <p className="caseLead">
+                We built an AI customer-enquiry assistant for Klemz Autos that
+                helps website visitors get answers to common questions and
+                start an enquiry.
+              </p>
+
+              <div className="caseFlow">
+                <div>
+                  <span>01</span>
+                  <strong>Customer asks</strong>
+                </div>
+                <div>
+                  <span>02</span>
+                  <strong>NexaBot responds</strong>
+                </div>
+                <div>
+                  <span>03</span>
+                  <strong>Enquiry starts</strong>
+                </div>
+                <div>
+                  <span>04</span>
+                  <strong>Business follows up</strong>
+                </div>
+              </div>
+
+              <a
+                href="https://klemzautos.wixsite.com/klemz-autos"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="primaryButton"
+              >
+                View Klemz Autos <span>↗</span>
+              </a>
+            </div>
+
+            <div className="caseStudyVisual">
+              <div className="caseBrowser">
+                <div className="browserTop">
+                  <span />
+                  <span />
+                  <span />
+                  <div>klemz-autos</div>
+                </div>
+
+                <div className="fakeWebsite">
+                  <div className="fakeNav">
+                    <strong>KLEMZ</strong>
+                    <span>Vehicles</span>
+                    <span>Services</span>
+                    <span>Contact</span>
+                  </div>
+
+                  <div className="fakeHero">
+                    <small>WELCOME TO KLEMZ AUTOS</small>
+                    <h3>Find your next vehicle.</h3>
+                  </div>
+
+                  <div className="miniChat">
+                    <div className="miniChatHead">
+                      <span>✦</span>
+                      <strong>Klemz Autos</strong>
+                      <i>×</i>
                     </div>
-                  ))}
+                    <div className="miniMessages">
+                      <p className="miniCustomer">
+                        Do you have cars available?
+                      </p>
+                      <p className="miniBot">
+                        Yes! I can help you find the right vehicle.
+                      </p>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
@@ -1902,508 +737,201 @@ const [currency, setCurrency] = useState<"NGN" | "USD">("NGN");
         </section>
 
         {/* PRICING */}
-        <section id="pricing" className="section section-border">
-          <div className="container">
-            <div style={{ textAlign: "center" }}>
-              <div className="section-label">Simple pricing</div>
+        <section className="pricingSection" id="pricing">
+          <div className="sectionHeader center">
+            <div className="eyebrow">FIRST CLIENT PROGRAMME</div>
+            <h2>
+              Start with an AI assistant{" "}
+              <span>built around your business.</span>
+            </h2>
+            <p>
+              Special introductory pricing for businesses ready to start
+              automating customer enquiries.
+            </p>
+          </div>
 
-            <h2
-  className="section-heading"
-  style={{ margin: "0 auto" }}
->
-  AI that pays for itself.
-</h2>
+          <div className="pricingCard">
+            <div className="pricingGlow" />
 
-              <p
-  className="section-subtitle"
-  style={{ marginLeft: "auto", marginRight: "auto" }}
->
-  Choose the AI system that fits your business today, then scale as your
-  needs grow.
-</p>
-              <div className="currency-switch">
-  <button
-    className={currency === "NGN" ? "currency-active" : ""}
-    onClick={() => setCurrency("NGN")}
-  >
-    ₦ NGN
-  </button>
+            <div className="limitedBadge">LIMITED INTRODUCTORY PRICING</div>
 
-  <button
-    className={currency === "USD" ? "currency-active" : ""}
-    onClick={() => setCurrency("USD")}
-  >
-    $ USD
-  </button>
-</div>
+            <div className="pricingMain">
+              <div className="priceText">
+                <span>SETUP</span>
+                <div>
+                  <small>₦</small>
+                  150,000
+                </div>
+                <p>One-time setup</p>
+              </div>
+
+              <div className="pricePlus">+</div>
+
+              <div className="priceText">
+                <span>MONTHLY</span>
+                <div>
+                  <small>₦</small>
+                  50,000
+                </div>
+                <p>Per month</p>
+              </div>
             </div>
-<div className="pricing-grid">
-  {/* Starter */}
-  <div className="pricing-card">
-    <div className="pricing-card-top">
-      <span className="pricing-label">STARTER</span>
-      <h3>AI Essentials</h3>
-      <p className="pricing-description">
-        Everything you need to add a professional AI assistant to your website.
-      </p>
-    </div>
 
-    <div className="pricing-price">
-  <span className="currency">
-    {currency === "NGN" ? "₦" : "$"}
-  </span>
+            <div className="pricingDivider" />
 
-  <span className="amount">
-    {currency === "NGN" ? "750,000" : "499"}
-  </span>
+            <div className="pricingBottom">
+              <div className="pricingFeatures">
+                <span>✓ Customized AI chatbot</span>
+                <span>✓ Website integration</span>
+                <span>✓ Business knowledge setup</span>
+                <span>✓ Enquiry qualification</span>
+                <span>✓ WhatsApp follow-up flow</span>
+                <span>✓ Ongoing support</span>
+              </div>
 
-  <span className="price-note">setup</span>
-</div>
-
-<p className="monthly-price">
-  + {currency === "NGN" ? "₦200,000" : "$199"}/month
-</p>
-
-    <div className="pricing-divider" />
-
-    <ul className="pricing-features">
-      <li>✓ AI website chatbot</li>
-      <li>✓ FAQ & business information</li>
-      <li>✓ Lead capture</li>
-      <li>✓ Basic customization</li>
-      <li>✓ Mobile-friendly experience</li>
-    </ul>
-
-    <a
-      href="https://wa.me/2349018324277?text=Hi%20NexaBot%20Agency!%20I'm%20interested%20in%20the%20Starter%20AI%20Essentials%20package."
-      target="_blank"
-      rel="noopener noreferrer"
-      className="pricing-button"
-    >
-      Get Started →
-    </a>
-  </div>
-
-  {/* Growth */}
-  <div className="pricing-card pricing-featured">
-    <div className="pricing-badge">MOST POPULAR</div>
-
-    <div className="pricing-card-top">
-      <span className="pricing-label">GROWTH</span>
-      <h3>AI Growth System</h3>
-      <p className="pricing-description">
-        A more powerful AI system designed to help businesses capture and
-        convert more opportunities.
-      </p>
-    </div>
-
-  <div className="pricing-price">
-  <span className="currency">
-    {currency === "NGN" ? "₦" : "$"}
-  </span>
-
-  <span className="amount">
-    {currency === "NGN" ? "1,500,000" : "999"}
-  </span>
-
-  <span className="price-note">setup</span>
-</div>
-
-<p className="monthly-price">
-  + {currency === "NGN" ? "₦300,000" : "$299"}/month
-</p>
-
-    <div className="pricing-divider" />
-
-    <ul className="pricing-features">
-      <li>✓ Everything in Starter</li>
-      <li>✓ Lead qualification</li>
-      <li>✓ Appointment booking</li>
-      <li>✓ Custom business knowledge</li>
-      <li>✓ Sales-focused conversations</li>
-      <li>✓ Advanced automation</li>
-    </ul>
-
-    <a
-      href="https://wa.me/2349018324277?text=Hi%20NexaBot%20Agency!%20I'm%20interested%20in%20the%20Growth%20AI%20package."
-      target="_blank"
-      rel="noopener noreferrer"
-      className="pricing-button pricing-button-primary"
-    >
-      Book a Demo →
-    </a>
-  </div>
-
-  {/* Custom */}
-  <div className="pricing-card">
-    <div className="pricing-card-top">
-      <span className="pricing-label">CUSTOM</span>
-      <h3>AI Business System</h3>
-      <p className="pricing-description">
-        Custom AI automation for businesses with advanced requirements.
-      </p>
-    </div>
-
-    <div className="pricing-custom-price">
-      Let's Talk
-    </div>
-
-    <p className="monthly-price">
-      Custom pricing based on your requirements
-    </p>
-
-    <div className="pricing-divider" />
-
-    <ul className="pricing-features">
-      <li>✓ Custom AI workflows</li>
-      <li>✓ WhatsApp integration</li>
-      <li>✓ CRM integrations</li>
-      <li>✓ Advanced automation</li>
-      <li>✓ Multiple business systems</li>
-      <li>✓ Custom deployment</li>
-    </ul>
-
-    <a
-      href="https://wa.me/2349018324277?text=Hi%20NexaBot%20Agency!%20I'd%20like%20to discuss a custom AI system."
-      target="_blank"
-      rel="noopener noreferrer"
-      className="pricing-button"
-    >
-      Talk to NexaBot →
-    </a>
-  </div>
-</div>
+              <a href="#contact" className="primaryButton">
+                Get Started <span>→</span>
+              </a>
+            </div>
           </div>
         </section>
 
-        {/* AI DEMO */}
-<section className="section section-border">
-  <div className="container">
-    <div style={{ textAlign: "center" }}>
-      <div className="section-label">See NexaBot in action</div>
-
-      <h2 className="section-heading" style={{ margin: "0 auto" }}>
-        Imagine what AI could do for your business.
-      </h2>
-
-      <p
-        className="section-subtitle"
-        style={{ marginLeft: "auto", marginRight: "auto" }}
-      >
-        Explore a few ways NexaBot can be customized for different types of
-        businesses.
-      </p>
-    </div>
-
-    <div className="demo-buttons">
-      {["Real Estate", "E-commerce", "Consulting"].map((business) => (
-        <button
-          key={business}
-          className={`demo-button ${
-            activeDemo === business ? "active" : ""
-          }`}
-          onClick={() => setActiveDemo(business)}
-        >
-          {business}
-        </button>
-      ))}
-    </div>
-
-    <div className="demo-panel">
-      {activeDemo === "Real Estate" && (
-        <>
-          <div className="demo-icon">🏠</div>
-
-          <div className="demo-content">
-            <div className="demo-label">REAL ESTATE AI</div>
-
-            <h3>Turn property enquiries into qualified leads.</h3>
-
-            <p>
-              NexaBot can answer property questions, identify serious buyers,
-              collect lead information, and help prospects schedule viewings.
-            </p>
-
-            <div className="demo-points">
-              <span>✓ Property questions</span>
-              <span>✓ Lead qualification</span>
-              <span>✓ Viewing requests</span>
-              <span>✓ 24/7 responses</span>
-            </div>
-          </div>
-        </>
-      )}
-
-      {activeDemo === "E-commerce" && (
-        <>
-          <div className="demo-icon">🛍️</div>
-
-          <div className="demo-content">
-            <div className="demo-label">E-COMMERCE AI</div>
-
-            <h3>Help shoppers find what they need faster.</h3>
-
-            <p>
-              NexaBot can answer product questions, recommend products, handle
-              common customer requests, capture leads, and guide shoppers
-              toward purchasing.
-            </p>
-
-            <div className="demo-points">
-              <span>✓ Product questions</span>
-              <span>✓ Product recommendations</span>
-              <span>✓ Customer support</span>
-              <span>✓ Sales assistance</span>
-            </div>
-          </div>
-        </>
-      )}
-
-      {activeDemo === "Consulting" && (
-        <>
-          <div className="demo-icon">💼</div>
-
-          <div className="demo-content">
-            <div className="demo-label">CONSULTING AI</div>
-
-            <h3>Convert website visitors into consultation opportunities.</h3>
-
-            <p>
-              NexaBot can answer common questions, understand what a prospect
-              needs, qualify potential clients, collect project information,
-              and guide them toward booking a consultation.
-            </p>
-
-            <div className="demo-points">
-              <span>✓ Prospect qualification</span>
-              <span>✓ FAQ automation</span>
-              <span>✓ Consultation requests</span>
-              <span>✓ Lead capture</span>
-            </div>
-          </div>
-        </>
-      )}
-    </div>
-
-    <div className="demo-cta">
-      <p>Want an AI system designed around your business?</p>
-
-      <a
-        href="https://wa.me/2349018324277?text=Hi%20NexaBot%20Agency!%20I'd%20like%20an%20AI%20system%20for%20my%20business."
-        target="_blank"
-        rel="noopener noreferrer"
-        className="button-primary"
-      >
-        Build My AI System →
-      </a>
-    </div>
-  </div>
-</section>
-{/* DEMO SHOWCASE */}
-<section className="section section-border">
-  <div className="container">
-    <div style={{ textAlign: "center" }}>
-      <div className="section-label">Live AI examples</div>
-
-      <h2 className="section-heading" style={{ margin: "0 auto" }}>
-        See what NexaBot can build for you.
-      </h2>
-
-      <p
-        className="section-subtitle"
-        style={{ marginLeft: "auto", marginRight: "auto" }}
-      >
-        These examples show how an AI assistant could work inside different
-        types of businesses.
-      </p>
-    </div>
-
-    <div className="showcase-grid">
-      <div className="showcase-card">
-        <div className="showcase-top">
-          <span className="showcase-icon">🏠</span>
-          <span className="showcase-status">● LIVE DEMO</span>
-        </div>
-
-        <div className="showcase-label">REAL ESTATE</div>
-
-        <h3>AI Property Assistant</h3>
-
-        <p>
-          Helps visitors discover properties, answer questions, qualify buyers,
-          and request viewings.
-        </p>
-
-        <div className="showcase-chat">
-          <div className="showcase-message">
-            Hi! 👋 Looking for a property?
-          </div>
-          <div className="showcase-message user">
-            Yes, I'm looking for a 3-bedroom house.
-          </div>
-          <div className="showcase-message">
-            Great. What's your preferred location and budget?
-          </div>
-        </div>
-
-        <a
-          href="https://wa.me/2349018324277?text=Hi%20NexaBot%20Agency!%20I'd%20like%20an%20AI%20assistant%20for%20my%20real%20estate%20business."
-          target="_blank"
-          rel="noopener noreferrer"
-          className="showcase-button"
-        >
-          Build This System →
-        </a>
-      </div>
-
-      <div className="showcase-card">
-        <div className="showcase-top">
-          <span className="showcase-icon">🛍️</span>
-          <span className="showcase-status">● LIVE DEMO</span>
-        </div>
-
-        <div className="showcase-label">E-COMMERCE</div>
-
-        <h3>AI Shopping Assistant</h3>
-
-        <p>
-          Answers product questions, recommends products, supports customers,
-          and helps turn conversations into sales.
-        </p>
-
-        <div className="showcase-chat">
-          <div className="showcase-message">
-            Hey! 👋 What are you looking for today?
-          </div>
-          <div className="showcase-message user">
-            I need a laptop for university.
-          </div>
-          <div className="showcase-message">
-            I can help with that. What's your preferred budget?
-          </div>
-        </div>
-
-        <a
-          href="https://wa.me/2349018324277?text=Hi%20NexaBot%20Agency!%20I'd%20like%20an%20AI%20assistant%20for%20my%20e-commerce%20business."
-          target="_blank"
-          rel="noopener noreferrer"
-          className="showcase-button"
-        >
-          Build This System →
-        </a>
-      </div>
-
-      <div className="showcase-card">
-        <div className="showcase-top">
-          <span className="showcase-icon">💼</span>
-          <span className="showcase-status">● LIVE DEMO</span>
-        </div>
-
-        <div className="showcase-label">CONSULTING</div>
-
-        <h3>AI Client Assistant</h3>
-
-        <p>
-          Answers questions, understands visitor needs, qualifies prospects,
-          and guides them toward booking a consultation.
-        </p>
-
-        <div className="showcase-chat">
-          <div className="showcase-message">
-            Welcome! 👋 How can our consulting team help?
-          </div>
-          <div className="showcase-message user">
-            I need help improving my business.
-          </div>
-          <div className="showcase-message">
-            Tell me a little about your business and your biggest challenge.
-          </div>
-        </div>
-
-        <a
-          href="https://wa.me/2349018324277?text=Hi%20NexaBot%20Agency!%20I'd%20like%20an%20AI%20assistant%20for%20my%20consulting%20business."
-          target="_blank"
-          rel="noopener noreferrer"
-          className="showcase-button"
-        >
-          Build This System →
-        </a>
-      </div>
-    </div>
-  </div>
-</section>
-        {/* FAQ */}
-        <section id="faq" className="section section-border">
-          <div className="container">
-            <div style={{ textAlign: "center" }}>
-              <div className="section-label">FAQ</div>
-
-              <h2
-                className="section-heading"
-                style={{ margin: "0 auto" }}
-              >
-                Questions, answered.
+        {/* DEMO SHOWCASE */}
+        <section className="showcaseSection">
+          <div className="showcaseTop">
+            <div>
+              <div className="eyebrow">SEE IT IN ACTION</div>
+              <h2>
+                Let customers ask.
+                <br />
+                <span>Let NexaBot handle the conversation.</span>
               </h2>
             </div>
 
-            <div className="faq-wrap">
-              {faqs.map((faq, index) => {
-                const isOpen = openFaq === index;
+            <p>
+              The best way to understand NexaBot is to experience the
+              conversation yourself.
+            </p>
+          </div>
 
-                return (
-                  <div className="faq" key={faq.question}>
-                    <button
-                      className="faq-question"
-                      onClick={() =>
-                        setOpenFaq(isOpen ? null : index)
-                      }
-                    >
-                      <span>{faq.question}</span>
-                      <span
-                        className={`faq-plus ${isOpen ? "open" : ""}`}
-                      >
-                        +
-                      </span>
-                    </button>
+          <div className="showcaseChat">
+            <div className="showcaseHeader">
+              <div className="showcaseBrand">
+                <div>✦</div>
+                <span>NexaBot AI</span>
+              </div>
 
-                    {isOpen && (
-                      <div className="faq-answer">
-                        {faq.answer}
-                      </div>
-                    )}
-                  </div>
-                );
-              })}
+              <span className="liveStatus">
+                <i /> LIVE DEMO
+              </span>
             </div>
+
+            <div className="showcaseMessages">
+              <div className="showcaseCustomer">
+                <span>CUSTOMER</span>
+                <p>How much does your service cost?</p>
+              </div>
+
+              <div className="showcaseBot">
+                <div className="showcaseBotIcon">✦</div>
+                <div>
+                  <span>NEXABOT</span>
+                  <p>
+                    I'd be happy to help. Are you looking for an AI chatbot
+                    for a website, customer support or lead generation?
+                  </p>
+                </div>
+              </div>
+
+              <div className="showcaseCustomer">
+                <span>CUSTOMER</span>
+                <p>For my real estate business.</p>
+              </div>
+
+              <div className="showcaseBot">
+                <div className="showcaseBotIcon">✦</div>
+                <div>
+                  <span>NEXABOT</span>
+                  <p>
+                    Perfect. NexaBot can help answer property questions,
+                    qualify potential buyers and direct serious enquiries to
+                    your team.
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <div className="demoInput">
+              <span>Ask NexaBot something...</span>
+              <div>↑</div>
+            </div>
+          </div>
+        </section>
+
+        {/* FAQ */}
+        <section className="faqSection" id="faq">
+          <div className="faqIntro">
+            <div className="eyebrow">FAQ</div>
+            <h2>
+              Questions?
+              <br />
+              <span>We've got answers.</span>
+            </h2>
+            <p>
+              Still unsure whether NexaBot is right for your business? Here
+              are some common questions.
+            </p>
+          </div>
+
+          <div className="faqList">
+            {faqs.map((faq, index) => (
+              <div
+                className={`faqItem ${openFaq === index ? "active" : ""}`}
+                key={index}
+              >
+                <button onClick={() => setOpenFaq(openFaq === index ? null : index)}>
+                  <span>{faq.q}</span>
+                  <i>{openFaq === index ? "−" : "+"}</i>
+                </button>
+
+                <div className="faqAnswer">
+                  <p>{faq.a}</p>
+                </div>
+              </div>
+            ))}
           </div>
         </section>
 
         {/* CTA */}
-        <section id="contact" className="cta">
-          <div className="cta-content">
-            <div className="section-label">Ready when you are</div>
+        <section className="ctaSection" id="contact">
+          <div className="ctaGlow" />
+
+          <div className="ctaContent">
+            <div className="eyebrow">READY TO AUTOMATE?</div>
 
             <h2>
-              Let AI handle the conversations.
+              Stop letting customer enquiries
+              <br />
+              <span>slip through the cracks.</span>
             </h2>
 
             <p>
-              Build a smarter customer experience with NexaBot and give your
-              business an AI-powered advantage.
+              Give your customers instant answers and give your team better
+              opportunities to follow up.
             </p>
 
-            <div className="hero-buttons">
+            <div className="ctaActions">
               <a
-  href="https://wa.me/2349018324277?text=Hi%20NexaBot%20Agency!%20I'm%20interested%20in%20booking%20a%20demo."
-  target="_blank"
-  rel="noopener noreferrer"
-  className="button-primary"
->
-  Book a Demo →
-</a>
+                href="https://wa.me/2349018324277?text=Hi%20NexaBot%20Agency%2C%20I'd%20like%20to%20learn%20more%20about%20your%20AI%20chatbot."
+                target="_blank"
+                rel="noopener noreferrer"
+                className="whatsappButton"
+              >
+                Chat on WhatsApp <span>↗</span>
+              </a>
 
-              <a href="#services" className="button-secondary">
-                Explore NexaBot
+              <a href="#pricing" className="ctaSecondary">
+                View First Client Programme
               </a>
             </div>
           </div>
@@ -2411,30 +939,2113 @@ const [currency, setCurrency] = useState<"NGN" | "USD">("NGN");
 
         {/* FOOTER */}
         <footer className="footer">
-          <div className="container footer-inner">
-            <a href="#" className="logo">
-              <span className="logo-mark" />
-              NexaBot
-            </a>
+          <div className="footerTop">
+            <div>
+              <a href="#" className="logo">
+                <span className="logoMark">✦</span>
+                <span>NexaBot</span>
+                <small>AGENCY</small>
+              </a>
 
-            <div className="footer-copy">
-              © {new Date().getFullYear()} NexaBot Agency. All rights
-              reserved.
+              <p>
+                AI-powered customer automation for businesses that don't want
+                to miss opportunities.
+              </p>
             </div>
 
-            <div className="footer-links">
-              <a href="#services">Services</a>
-              <a href="#pricing">Pricing</a>
-              <a href="#faq">FAQ</a>
+            <div className="footerLinks">
+              <div>
+                <strong>Navigate</strong>
+                <a href="#services">Services</a>
+                <a href="#how-it-works">How It Works</a>
+                <a href="#pricing">Pricing</a>
+              </div>
+
+              <div>
+                <strong>Company</strong>
+                <a href="#who-its-for">Who It's For</a>
+                <a href="#faq">FAQ</a>
+                <a href="#contact">Contact</a>
+              </div>
             </div>
           </div>
+
+          <div className="footerBottom">
+            <span>© {new Date().getFullYear()} NexaBot Agency.</span>
+            <span>Built for businesses that want to grow.</span>
+          </div>
         </footer>
-   </div>
-<ChatBot
-  apiEndpoint="/api/chat"
-  businessName="NexaBot"
-  initialMessage="Hi! 👋 I'm NexaBot. How can I help you learn more about our AI solutions?"
-/>
-</>
-);
+      </main>
+
+      {/* YOUR EXISTING WORKING HOMEPAGE CHATBOT */}
+      <ChatBot
+        apiEndpoint="/api/chat"
+        businessName="NexaBot"
+        initialMessage="Hi! 👋 I'm NexaBot. How can I help you learn more about our AI solutions?"
+      />
+
+      <style jsx global>{`
+        * {
+          box-sizing: border-box;
+        }
+
+        html {
+          scroll-behavior: smooth;
+        }
+
+        body {
+          margin: 0;
+          background: #050507;
+          color: #f5f5f7;
+          font-family:
+            Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont,
+            "Segoe UI", sans-serif;
+        }
+
+        a {
+          color: inherit;
+          text-decoration: none;
+        }
+
+        button {
+          font: inherit;
+        }
+
+        .site {
+          min-height: 100vh;
+          overflow: hidden;
+          background:
+            radial-gradient(
+              circle at 75% 8%,
+              rgba(128, 77, 255, 0.11),
+              transparent 28%
+            ),
+            radial-gradient(
+              circle at 10% 40%,
+              rgba(67, 100, 255, 0.07),
+              transparent 25%
+            ),
+            #050507;
+        }
+
+        .site section {
+          position: relative;
+        }
+
+        .navbar {
+          position: sticky;
+          top: 0;
+          z-index: 100;
+          height: 76px;
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          padding: 0 5vw;
+          border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+          background: rgba(5, 5, 7, 0.78);
+          backdrop-filter: blur(18px);
+        }
+
+        .logo {
+          display: flex;
+          align-items: center;
+          gap: 9px;
+          font-size: 20px;
+          font-weight: 800;
+          letter-spacing: -0.5px;
+        }
+
+        .logoMark {
+          display: grid;
+          place-items: center;
+          width: 29px;
+          height: 29px;
+          border: 1px solid rgba(177, 131, 255, 0.7);
+          border-radius: 8px;
+          color: #c59cff;
+          box-shadow: 0 0 25px rgba(141, 86, 255, 0.3);
+        }
+
+        .logo small {
+          margin-left: -5px;
+          margin-top: 4px;
+          font-size: 7px;
+          letter-spacing: 1.5px;
+          color: #777783;
+        }
+
+        .navLinks {
+          display: flex;
+          gap: 32px;
+          align-items: center;
+        }
+
+        .navLinks a {
+          color: #92929d;
+          font-size: 13px;
+          transition: 0.25s ease;
+        }
+
+        .navLinks a:hover {
+          color: white;
+        }
+
+        .navCta {
+          padding: 11px 17px;
+          border: 1px solid rgba(255, 255, 255, 0.14);
+          border-radius: 9px;
+          background: rgba(255, 255, 255, 0.045);
+          font-size: 13px;
+          transition: 0.25s ease;
+        }
+
+        .navCta:hover {
+          border-color: rgba(180, 135, 255, 0.7);
+          box-shadow: 0 0 25px rgba(133, 75, 255, 0.18);
+        }
+
+        .navCta span {
+          color: #b990ff;
+          margin-left: 6px;
+        }
+
+        .menuButton {
+          display: none;
+          border: 0;
+          background: transparent;
+          color: white;
+          font-size: 25px;
+        }
+
+        .hero {
+          min-height: calc(100vh - 76px);
+          display: grid;
+          grid-template-columns: 0.95fr 1.05fr;
+          align-items: center;
+          gap: 40px;
+          padding: 80px 7vw 100px;
+          isolation: isolate;
+        }
+
+        .hero:before,
+        .outcomeSection:before,
+        .journeySection:before,
+        .servicesSection:before,
+        .industriesSection:before,
+        .processSection:before,
+        .whySection:before,
+        .pricingSection:before,
+        .showcaseSection:before,
+        .faqSection:before {
+          content: "";
+          position: absolute;
+          inset: 0;
+          pointer-events: none;
+          opacity: 0.28;
+          background-image:
+            linear-gradient(rgba(255, 255, 255, 0.035) 1px, transparent 1px),
+            linear-gradient(
+              90deg,
+              rgba(255, 255, 255, 0.035) 1px,
+              transparent 1px
+            );
+          background-size: 70px 70px;
+          mask-image: linear-gradient(to bottom, black, transparent 80%);
+          z-index: -1;
+        }
+
+        .heroContent {
+          position: relative;
+          z-index: 2;
+        }
+
+        .eyebrow {
+          display: inline-flex;
+          align-items: center;
+          gap: 8px;
+          margin-bottom: 21px;
+          color: #ad8ae4;
+          font-size: 10px;
+          font-weight: 700;
+          letter-spacing: 2.5px;
+        }
+
+        .pulseDot {
+          width: 7px;
+          height: 7px;
+          border-radius: 50%;
+          background: #b98aff;
+          box-shadow: 0 0 12px #a86cff;
+          animation: pulse 1.7s infinite;
+        }
+
+        @keyframes pulse {
+          50% {
+            opacity: 0.4;
+            transform: scale(0.7);
+          }
+        }
+
+        .hero h1 {
+          max-width: 720px;
+          margin: 0;
+          font-size: clamp(46px, 6vw, 78px);
+          line-height: 0.98;
+          letter-spacing: -4px;
+          font-weight: 800;
+        }
+
+        .hero h1 span,
+        h2 span {
+          color: #bd91ff;
+          text-shadow: 0 0 35px rgba(157, 93, 255, 0.2);
+        }
+
+        .heroSub {
+          margin: 29px 0 10px;
+          color: #bcbcc6;
+          font-size: 21px;
+          line-height: 1.45;
+        }
+
+        .heroSub strong {
+          color: white;
+        }
+
+        .heroDescription {
+          max-width: 560px;
+          margin: 0;
+          color: #858591;
+          font-size: 16px;
+          line-height: 1.7;
+        }
+
+        .heroActions {
+          display: flex;
+          flex-wrap: wrap;
+          gap: 12px;
+          margin-top: 30px;
+        }
+
+        .primaryButton,
+        .secondaryButton,
+        .outlineButton,
+        .whatsappButton {
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          gap: 12px;
+          min-height: 50px;
+          padding: 0 21px;
+          border-radius: 10px;
+          font-size: 13px;
+          font-weight: 700;
+          transition:
+            transform 0.25s ease,
+            box-shadow 0.25s ease,
+            border-color 0.25s ease;
+        }
+
+        .primaryButton {
+          color: white;
+          background: linear-gradient(135deg, #8050d9, #9e6af4);
+          box-shadow: 0 12px 40px rgba(118, 62, 220, 0.24);
+        }
+
+        .primaryButton:hover,
+        .whatsappButton:hover {
+          transform: translateY(-3px);
+          box-shadow: 0 18px 50px rgba(133, 71, 240, 0.35);
+        }
+
+        .secondaryButton,
+        .outlineButton {
+          border: 1px solid rgba(255, 255, 255, 0.13);
+          color: #d8d8df;
+          background: rgba(255, 255, 255, 0.035);
+        }
+
+        .secondaryButton:hover,
+        .outlineButton:hover {
+          transform: translateY(-3px);
+          border-color: rgba(190, 145, 255, 0.55);
+        }
+
+        .heroTrust {
+          display: flex;
+          flex-wrap: wrap;
+          gap: 20px;
+          margin-top: 33px;
+        }
+
+        .heroTrust div {
+          display: flex;
+          align-items: center;
+          gap: 7px;
+          color: #777783;
+          font-size: 10px;
+        }
+
+        .heroTrust span {
+          color: #ad82ed;
+        }
+
+        .heroVisual {
+          position: relative;
+          min-height: 650px;
+          display: grid;
+          place-items: center;
+        }
+
+        .visualOrb {
+          position: absolute;
+          border-radius: 50%;
+          filter: blur(80px);
+          pointer-events: none;
+        }
+
+        .orbOne {
+          width: 300px;
+          height: 300px;
+          background: rgba(125, 68, 255, 0.16);
+          top: 18%;
+          right: 8%;
+        }
+
+        .orbTwo {
+          width: 220px;
+          height: 220px;
+          background: rgba(47, 111, 255, 0.09);
+          bottom: 8%;
+          left: 8%;
+        }
+
+        .chatWindow {
+          position: relative;
+          width: min(500px, 100%);
+          border: 1px solid rgba(255, 255, 255, 0.12);
+          border-radius: 22px;
+          background: rgba(13, 13, 17, 0.91);
+          box-shadow:
+            0 40px 100px rgba(0, 0, 0, 0.55),
+            0 0 80px rgba(128, 69, 255, 0.13);
+          overflow: hidden;
+          transform: perspective(1200px) rotateY(-4deg) rotateX(2deg);
+          animation: floatChat 5s ease-in-out infinite;
+          z-index: 3;
+        }
+
+        @keyframes floatChat {
+          0%,
+          100% {
+            transform: perspective(1200px) rotateY(-4deg) rotateX(2deg)
+              translateY(0);
+          }
+          50% {
+            transform: perspective(1200px) rotateY(-4deg) rotateX(2deg)
+              translateY(-10px);
+          }
+        }
+
+        .chatHeader {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          padding: 17px 20px;
+          border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+          background: rgba(255, 255, 255, 0.025);
+        }
+
+        .botIdentity {
+          display: flex;
+          align-items: center;
+          gap: 11px;
+        }
+
+        .botAvatar,
+        .botMini,
+        .showcaseBotIcon {
+          display: grid;
+          place-items: center;
+          flex-shrink: 0;
+          color: #c59cff;
+          background: rgba(157, 91, 255, 0.11);
+          border: 1px solid rgba(177, 128, 255, 0.28);
+          box-shadow: 0 0 22px rgba(142, 81, 255, 0.15);
+        }
+
+        .botAvatar {
+          width: 36px;
+          height: 36px;
+          border-radius: 11px;
+        }
+
+        .botIdentity strong {
+          display: block;
+          font-size: 13px;
+        }
+
+        .botIdentity span {
+          display: flex;
+          align-items: center;
+          gap: 5px;
+          margin-top: 3px;
+          color: #777781;
+          font-size: 9px;
+        }
+
+        .botIdentity i,
+        .liveStatus i {
+          width: 5px;
+          height: 5px;
+          display: inline-block;
+          border-radius: 50%;
+          background: #65d69a;
+          box-shadow: 0 0 9px #65d69a;
+        }
+
+        .headerDots {
+          color: #696973;
+          letter-spacing: 3px;
+        }
+
+        .chatBody {
+          padding: 23px;
+        }
+
+        .chatLabel,
+        .messageTag,
+        .showcaseCustomer span,
+        .showcaseBot span {
+          font-size: 8px;
+          font-weight: 800;
+          letter-spacing: 1.6px;
+          color: #666671;
+        }
+
+        .chatLabel {
+          margin-bottom: 18px;
+        }
+
+        .message {
+          max-width: 88%;
+          margin-bottom: 16px;
+        }
+
+        .message p {
+          margin: 6px 0 0;
+          padding: 13px 15px;
+          font-size: 12px;
+          line-height: 1.6;
+        }
+
+        .customer {
+          margin-left: auto;
+        }
+
+        .customer .messageTag {
+          display: block;
+          text-align: right;
+        }
+
+        .customer p {
+          color: #dedee5;
+          background: rgba(255, 255, 255, 0.07);
+          border: 1px solid rgba(255, 255, 255, 0.07);
+          border-radius: 14px 14px 3px 14px;
+        }
+
+        .bot {
+          display: flex;
+          gap: 9px;
+        }
+
+        .botMini {
+          width: 27px;
+          height: 27px;
+          margin-top: 16px;
+          border-radius: 8px;
+          font-size: 10px;
+        }
+
+        .bot p {
+          color: #cfcfd8;
+          background: rgba(130, 76, 215, 0.09);
+          border: 1px solid rgba(159, 103, 238, 0.13);
+          border-radius: 3px 14px 14px 14px;
+        }
+
+        .qualification {
+          display: flex;
+          align-items: center;
+          gap: 10px;
+          margin-top: 20px;
+          padding: 12px;
+          border: 1px solid rgba(94, 206, 151, 0.17);
+          border-radius: 10px;
+          background: rgba(62, 190, 131, 0.045);
+        }
+
+        .checkCircle {
+          display: grid;
+          place-items: center;
+          width: 27px;
+          height: 27px;
+          border-radius: 50%;
+          background: rgba(75, 200, 142, 0.12);
+          color: #6cdaa2;
+        }
+
+        .qualification strong,
+        .qualification span {
+          display: block;
+        }
+
+        .qualification strong {
+          font-size: 10px;
+        }
+
+        .qualification span {
+          margin-top: 3px;
+          color: #74747e;
+          font-size: 9px;
+        }
+
+        .chatInput,
+        .demoInput {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          margin: 0 15px 15px;
+          padding: 9px 9px 9px 15px;
+          border: 1px solid rgba(255, 255, 255, 0.08);
+          border-radius: 11px;
+          color: #5f5f68;
+          font-size: 10px;
+        }
+
+        .chatInput button,
+        .demoInput div {
+          display: grid;
+          place-items: center;
+          width: 29px;
+          height: 29px;
+          border: 0;
+          border-radius: 8px;
+          color: white;
+          background: #8551d7;
+        }
+
+        .floatingCard {
+          position: absolute;
+          display: flex;
+          align-items: center;
+          gap: 9px;
+          padding: 11px 13px;
+          border: 1px solid rgba(255, 255, 255, 0.1);
+          border-radius: 12px;
+          background: rgba(12, 12, 16, 0.88);
+          box-shadow: 0 18px 50px rgba(0, 0, 0, 0.35);
+          backdrop-filter: blur(15px);
+          z-index: 5;
+        }
+
+        .responseCard {
+          top: 14%;
+          left: -1%;
+          animation: floatSmall 4s ease-in-out infinite;
+        }
+
+        .leadCard {
+          right: -2%;
+          bottom: 15%;
+          animation: floatSmall 4.5s ease-in-out infinite reverse;
+        }
+
+        @keyframes floatSmall {
+          50% {
+            transform: translateY(-7px);
+          }
+        }
+
+        .cardIcon {
+          display: grid;
+          place-items: center;
+          width: 29px;
+          height: 29px;
+          border-radius: 8px;
+          color: #b991ff;
+          background: rgba(144, 85, 231, 0.12);
+        }
+
+        .floatingCard strong,
+        .floatingCard small {
+          display: block;
+        }
+
+        .floatingCard strong {
+          font-size: 10px;
+        }
+
+        .floatingCard small {
+          margin-top: 3px;
+          color: #70707b;
+          font-size: 8px;
+        }
+
+        .marquee {
+          overflow: hidden;
+          border-top: 1px solid rgba(255, 255, 255, 0.06);
+          border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+          background: rgba(255, 255, 255, 0.018);
+        }
+
+        .marqueeTrack {
+          display: flex;
+          width: max-content;
+          align-items: center;
+          gap: 35px;
+          padding: 17px 0;
+          color: #555560;
+          font-size: 9px;
+          font-weight: 700;
+          letter-spacing: 2.5px;
+          animation: marquee 25s linear infinite;
+        }
+
+        .marqueeTrack b {
+          color: #8e62c6;
+        }
+
+        @keyframes marquee {
+          to {
+            transform: translateX(-30%);
+          }
+        }
+
+        .outcomeSection,
+        .journeySection,
+        .servicesSection,
+        .industriesSection,
+        .processSection,
+        .whySection,
+        .pricingSection,
+        .showcaseSection,
+        .faqSection {
+          padding: 130px 7vw;
+        }
+
+        .sectionHeader {
+          position: relative;
+          z-index: 2;
+          display: flex;
+          align-items: end;
+          justify-content: space-between;
+          gap: 50px;
+          margin-bottom: 55px;
+        }
+
+        .sectionHeader.center {
+          display: block;
+          max-width: 800px;
+          margin: 0 auto 55px;
+          text-align: center;
+        }
+
+        .sectionHeader h2,
+        .showcaseTop h2,
+        .whyContent h2,
+        .faqIntro h2,
+        .processIntro h2,
+        .ctaContent h2 {
+          margin: 0;
+          font-size: clamp(37px, 4.5vw, 62px);
+          line-height: 1.02;
+          letter-spacing: -3px;
+        }
+
+        .sectionHeader p {
+          max-width: 430px;
+          margin: 0;
+          color: #777781;
+          font-size: 14px;
+          line-height: 1.8;
+        }
+
+        .sectionHeader.center p {
+          max-width: 620px;
+          margin: 20px auto 0;
+        }
+
+        .comparison {
+          position: relative;
+          z-index: 2;
+          display: grid;
+          grid-template-columns: 1fr 1fr;
+          gap: 18px;
+          max-width: 1100px;
+          margin: auto;
+        }
+
+        .comparisonCard {
+          padding: 30px;
+          border: 1px solid rgba(255, 255, 255, 0.09);
+          border-radius: 18px;
+          background: rgba(255, 255, 255, 0.025);
+        }
+
+        .comparisonCard.solved {
+          border-color: rgba(162, 112, 237, 0.32);
+          background: linear-gradient(
+            145deg,
+            rgba(125, 71, 214, 0.1),
+            rgba(255, 255, 255, 0.025)
+          );
+          box-shadow: 0 20px 70px rgba(98, 46, 178, 0.08);
+        }
+
+        .comparisonTop {
+          display: flex;
+          align-items: center;
+          gap: 10px;
+          color: #656570;
+          font-size: 9px;
+          font-weight: 800;
+          letter-spacing: 1.8px;
+        }
+
+        .comparisonIcon {
+          display: grid;
+          place-items: center;
+          width: 25px;
+          height: 25px;
+          border-radius: 50%;
+          background: rgba(255, 255, 255, 0.06);
+          color: #8b8b94;
+        }
+
+        .solved .comparisonIcon {
+          color: #bd91ff;
+          background: rgba(156, 99, 237, 0.14);
+        }
+
+        .comparisonCard h3 {
+          margin: 20px 0 30px;
+          font-size: 22px;
+        }
+
+        .flow {
+          display: grid;
+          grid-template-columns: 1fr auto 1fr auto 1fr;
+          align-items: center;
+          gap: 13px;
+        }
+
+        .flow div strong,
+        .flow div span {
+          display: block;
+        }
+
+        .flow strong {
+          font-size: 11px;
+        }
+
+        .flow span {
+          margin-top: 5px;
+          color: #666671;
+          font-size: 9px;
+          line-height: 1.4;
+        }
+
+        .flow i {
+          color: #555560;
+          font-style: normal;
+        }
+
+        .solved .flow i {
+          color: #9365d0;
+        }
+
+        .journeyGrid {
+          position: relative;
+          z-index: 2;
+          display: grid;
+          grid-template-columns: 1fr auto 1fr auto 1fr auto 1fr;
+          align-items: stretch;
+          gap: 12px;
+        }
+
+        .journeyCard {
+          padding: 25px;
+          border: 1px solid rgba(255, 255, 255, 0.08);
+          border-radius: 16px;
+          background: rgba(255, 255, 255, 0.025);
+          transition: 0.3s ease;
+        }
+
+        .journeyCard:hover,
+        .serviceCard:hover,
+        .industryCard:hover {
+          transform: translateY(-6px);
+          border-color: rgba(175, 126, 244, 0.32);
+          box-shadow: 0 25px 70px rgba(0, 0, 0, 0.25);
+        }
+
+        .stepNumber,
+        .serviceNumber,
+        .industryContent > span {
+          color: #62626c;
+          font-size: 9px;
+          letter-spacing: 1.5px;
+        }
+
+        .journeyIcon {
+          display: grid;
+          place-items: center;
+          width: 46px;
+          height: 46px;
+          margin: 25px 0 20px;
+          border: 1px solid rgba(164, 109, 240, 0.25);
+          border-radius: 13px;
+          color: #b991ff;
+          background: rgba(145, 82, 225, 0.08);
+          font-size: 19px;
+        }
+
+        .journeyCard h3 {
+          margin: 0 0 9px;
+          font-size: 13px;
+          letter-spacing: 1px;
+        }
+
+        .journeyCard p {
+          margin: 0;
+          color: #73737d;
+          font-size: 11px;
+          line-height: 1.7;
+        }
+
+        .journeyLine {
+          display: grid;
+          place-items: center;
+          color: #694b88;
+          font-size: 20px;
+        }
+
+        .servicesGrid {
+          position: relative;
+          z-index: 2;
+          display: grid;
+          grid-template-columns: repeat(3, 1fr);
+          gap: 15px;
+        }
+
+        .serviceCard {
+          position: relative;
+          min-height: 270px;
+          padding: 27px;
+          overflow: hidden;
+          border: 1px solid rgba(255, 255, 255, 0.08);
+          border-radius: 17px;
+          background: rgba(255, 255, 255, 0.024);
+          transition: 0.3s ease;
+        }
+
+        .serviceCard.large {
+          grid-column: span 2;
+          background:
+            radial-gradient(
+              circle at 80% 10%,
+              rgba(143, 82, 230, 0.12),
+              transparent 35%
+            ),
+            rgba(255, 255, 255, 0.024);
+        }
+
+        .serviceIcon {
+          display: grid;
+          place-items: center;
+          width: 43px;
+          height: 43px;
+          margin: 27px 0 18px;
+          border: 1px solid rgba(161, 105, 235, 0.25);
+          border-radius: 12px;
+          color: #b78cff;
+          background: rgba(132, 72, 217, 0.08);
+        }
+
+        .serviceCard h3 {
+          margin: 0 0 10px;
+          font-size: 18px;
+        }
+
+        .serviceCard p {
+          max-width: 430px;
+          margin: 0;
+          color: #75757f;
+          font-size: 11px;
+          line-height: 1.7;
+        }
+
+        .serviceVisual {
+          position: absolute;
+          right: 25px;
+          bottom: 24px;
+          display: flex;
+          flex-direction: column;
+          gap: 6px;
+          width: 230px;
+          opacity: 0.7;
+        }
+
+        .serviceVisual span {
+          padding: 8px 11px;
+          border: 1px solid rgba(255, 255, 255, 0.07);
+          border-radius: 8px;
+          color: #777782;
+          background: rgba(255, 255, 255, 0.03);
+          font-size: 8px;
+        }
+
+        .serviceVisual span:last-child {
+          align-self: flex-end;
+          color: #aa83db;
+          border-color: rgba(164, 108, 235, 0.16);
+        }
+
+        .industryGrid {
+          position: relative;
+          z-index: 2;
+          display: grid;
+          grid-template-columns: repeat(4, 1fr);
+          gap: 14px;
+        }
+
+        .industryCard {
+          overflow: hidden;
+          border: 1px solid rgba(255, 255, 255, 0.08);
+          border-radius: 17px;
+          background: rgba(255, 255, 255, 0.025);
+          transition: 0.3s ease;
+        }
+
+        .industryImage {
+          height: 190px;
+          display: grid;
+          place-items: center;
+          font-size: 45px;
+          color: rgba(255, 255, 255, 0.55);
+          background:
+            radial-gradient(circle, rgba(157, 97, 230, 0.19), transparent 30%),
+            linear-gradient(135deg, #17131d, #0b0b0e);
+        }
+
+        .industryImage span {
+          filter: drop-shadow(0 0 25px rgba(170, 111, 244, 0.5));
+        }
+
+        .industryContent {
+          padding: 23px;
+        }
+
+        .industryContent h3 {
+          margin: 12px 0 8px;
+          font-size: 17px;
+        }
+
+        .industryContent p {
+          min-height: 62px;
+          margin: 0 0 20px;
+          color: #70707b;
+          font-size: 10px;
+          line-height: 1.7;
+        }
+
+        .industryContent a {
+          color: #aa7be1;
+          font-size: 10px;
+          font-weight: 700;
+        }
+
+        .processSection {
+          display: grid;
+          grid-template-columns: 0.8fr 1.2fr;
+          gap: 100px;
+          align-items: start;
+          background: #08080b;
+        }
+
+        .processIntro {
+          position: sticky;
+          top: 120px;
+        }
+
+        .processIntro p {
+          max-width: 400px;
+          margin: 25px 0;
+          color: #777781;
+          font-size: 13px;
+          line-height: 1.8;
+        }
+
+        .processSteps {
+          border-top: 1px solid rgba(255, 255, 255, 0.09);
+        }
+
+        .processStep {
+          display: grid;
+          grid-template-columns: 70px 1fr;
+          gap: 25px;
+          padding: 31px 0;
+          border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .processStepNumber {
+          color: #a273d8;
+          font-size: 10px;
+          letter-spacing: 2px;
+        }
+
+        .processStep h3 {
+          margin: 0 0 9px;
+          font-size: 16px;
+        }
+
+        .processStep p {
+          margin: 0;
+          color: #71717b;
+          font-size: 11px;
+          line-height: 1.7;
+        }
+
+        .whySection {
+          display: grid;
+          grid-template-columns: 1fr 1fr;
+          align-items: center;
+          gap: 100px;
+        }
+
+        .whyVisual {
+          position: relative;
+          min-height: 470px;
+          display: grid;
+          place-items: center;
+        }
+
+        .gridSphere {
+          position: relative;
+          width: 300px;
+          height: 300px;
+          display: grid;
+          place-items: center;
+          border-radius: 50%;
+          background:
+            radial-gradient(
+              circle at center,
+              rgba(148, 88, 230, 0.18),
+              rgba(24, 19, 33, 0.7) 50%,
+              transparent 70%
+            ),
+            repeating-radial-gradient(
+              circle,
+              rgba(173, 127, 241, 0.13) 0 1px,
+              transparent 1px 24px
+            );
+          box-shadow: 0 0 100px rgba(115, 57, 206, 0.15);
+        }
+
+        .sphereCore {
+          width: 90px;
+          height: 90px;
+          display: grid;
+          place-items: center;
+          border: 1px solid rgba(192, 147, 255, 0.45);
+          border-radius: 25px;
+          color: #ca9fff;
+          background: rgba(137, 78, 218, 0.1);
+          box-shadow:
+            0 0 40px rgba(138, 80, 226, 0.35),
+            inset 0 0 30px rgba(155, 96, 238, 0.12);
+          font-size: 30px;
+          animation: corePulse 3s infinite;
+        }
+
+        @keyframes corePulse {
+          50% {
+            box-shadow:
+              0 0 70px rgba(138, 80, 226, 0.45),
+              inset 0 0 30px rgba(155, 96, 238, 0.2);
+          }
+        }
+
+        .orbit {
+          position: absolute;
+          border: 1px solid rgba(170, 115, 237, 0.18);
+          border-radius: 50%;
+        }
+
+        .orbitA {
+          inset: 8%;
+          transform: rotate(35deg) scaleY(0.45);
+        }
+
+        .orbitB {
+          inset: 8%;
+          transform: rotate(-35deg) scaleY(0.45);
+        }
+
+        .orbitC {
+          inset: 8%;
+          transform: rotate(90deg) scaleY(0.45);
+        }
+
+        .whyFloating {
+          position: absolute;
+          display: flex;
+          flex-direction: column;
+          padding: 13px 17px;
+          border: 1px solid rgba(255, 255, 255, 0.1);
+          border-radius: 10px;
+          background: rgba(10, 10, 14, 0.9);
+          box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        .topFloat {
+          top: 18%;
+          right: 5%;
+        }
+
+        .bottomFloat {
+          bottom: 15%;
+          left: 5%;
+        }
+
+        .whyFloating strong {
+          color: #c095f2;
+          font-size: 17px;
+        }
+
+        .whyFloating span {
+          margin-top: 3px;
+          color: #686873;
+          font-size: 8px;
+        }
+
+        .whyContent > p {
+          max-width: 540px;
+          margin: 25px 0 35px;
+          color: #7b7b85;
+          font-size: 14px;
+          line-height: 1.8;
+        }
+
+        .benefits {
+          display: grid;
+          grid-template-columns: 1fr 1fr;
+          gap: 25px;
+        }
+
+        .benefits > div {
+          display: flex;
+          gap: 12px;
+        }
+
+        .benefits > div > span {
+          display: grid;
+          place-items: center;
+          flex-shrink: 0;
+          width: 25px;
+          height: 25px;
+          border-radius: 50%;
+          color: #b890ed;
+          background: rgba(150, 89, 226, 0.1);
+          font-size: 10px;
+        }
+
+        .benefits strong {
+          font-size: 11px;
+        }
+
+        .benefits p {
+          margin: 5px 0 0;
+          color: #6b6b75;
+          font-size: 9px;
+          line-height: 1.5;
+        }
+
+        .caseStudySection {
+          padding: 50px 7vw 130px;
+        }
+
+        .caseStudyCard {
+          position: relative;
+          display: grid;
+          grid-template-columns: 0.85fr 1.15fr;
+          align-items: center;
+          gap: 50px;
+          padding: 55px;
+          overflow: hidden;
+          border: 1px solid rgba(175, 126, 244, 0.18);
+          border-radius: 25px;
+          background:
+            radial-gradient(
+              circle at 90% 20%,
+              rgba(136, 77, 223, 0.13),
+              transparent 35%
+            ),
+            #0a0a0e;
+        }
+
+        .caseStudyContent h2 {
+          margin: 0;
+          font-size: clamp(40px, 5vw, 66px);
+          letter-spacing: -3px;
+        }
+
+        .caseStudyContent h2 span {
+          color: #b78af1;
+        }
+
+        .caseLead {
+          max-width: 510px;
+          margin: 20px 0 30px;
+          color: #777781;
+          font-size: 13px;
+          line-height: 1.8;
+        }
+
+        .caseFlow {
+          display: grid;
+          grid-template-columns: 1fr 1fr;
+          gap: 15px;
+          margin-bottom: 35px;
+        }
+
+        .caseFlow div {
+          padding: 13px;
+          border: 1px solid rgba(255, 255, 255, 0.07);
+          border-radius: 9px;
+          background: rgba(255, 255, 255, 0.025);
+        }
+
+        .caseFlow span,
+        .caseFlow strong {
+          display: block;
+        }
+
+        .caseFlow span {
+          color: #8962b3;
+          font-size: 8px;
+        }
+
+        .caseFlow strong {
+          margin-top: 6px;
+          color: #d2d2d9;
+          font-size: 9px;
+        }
+
+        .caseBrowser {
+          overflow: hidden;
+          border: 1px solid rgba(255, 255, 255, 0.11);
+          border-radius: 15px;
+          background: #101014;
+          box-shadow: 0 35px 80px rgba(0, 0, 0, 0.4);
+          transform: rotate(2deg);
+        }
+
+        .browserTop {
+          display: flex;
+          align-items: center;
+          gap: 6px;
+          height: 35px;
+          padding: 0 13px;
+          border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+          background: #17171b;
+        }
+
+        .browserTop > span {
+          width: 6px;
+          height: 6px;
+          border-radius: 50%;
+          background: #55555e;
+        }
+
+        .browserTop div {
+          flex: 1;
+          margin-left: 10px;
+          padding: 5px;
+          border-radius: 5px;
+          color: #55555f;
+          background: #101014;
+          text-align: center;
+          font-size: 7px;
+        }
+
+        .fakeWebsite {
+          position: relative;
+          min-height: 350px;
+          padding: 20px;
+          background:
+            radial-gradient(
+              circle at 80% 30%,
+              rgba(133, 75, 211, 0.16),
+              transparent 30%
+            ),
+            linear-gradient(145deg, #16131b, #09090b);
+        }
+
+        .fakeNav {
+          display: flex;
+          gap: 18px;
+          align-items: center;
+          color: #666670;
+          font-size: 7px;
+        }
+
+        .fakeNav strong {
+          margin-right: auto;
+          color: #c8c8ce;
+          font-size: 11px;
+        }
+
+        .fakeHero {
+          margin-top: 70px;
+        }
+
+        .fakeHero small {
+          color: #936bc2;
+          font-size: 7px;
+          letter-spacing: 1.5px;
+        }
+
+        .fakeHero h3 {
+          max-width: 300px;
+          margin: 10px 0;
+          font-size: 35px;
+          letter-spacing: -2px;
+        }
+
+        .miniChat {
+          position: absolute;
+          right: 22px;
+          bottom: 20px;
+          width: 190px;
+          border: 1px solid rgba(255, 255, 255, 0.1);
+          border-radius: 11px;
+          background: #111116;
+          box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+          overflow: hidden;
+        }
+
+        .miniChatHead {
+          display: flex;
+          align-items: center;
+          gap: 7px;
+          padding: 9px;
+          border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+          font-size: 7px;
+        }
+
+        .miniChatHead span {
+          color: #b889ee;
+        }
+
+        .miniChatHead i {
+          margin-left: auto;
+          color: #55555e;
+        }
+
+        .miniMessages {
+          padding: 9px;
+        }
+
+        .miniMessages p {
+          padding: 7px;
+          margin: 5px 0;
+          border-radius: 7px;
+          font-size: 7px;
+          line-height: 1.5;
+        }
+
+        .miniCustomer {
+          margin-left: 20px !important;
+          background: rgba(255, 255, 255, 0.07);
+          color: #aaaab2;
+        }
+
+        .miniBot {
+          background: rgba(132, 77, 216, 0.1);
+          color: #b9a1d5;
+        }
+
+        .pricingCard {
+          position: relative;
+          max-width: 1000px;
+          margin: auto;
+          padding: 55px;
+          overflow: hidden;
+          border: 1px solid rgba(178, 130, 245, 0.3);
+          border-radius: 22px;
+          background:
+            radial-gradient(
+              circle at 50% 0%,
+              rgba(136, 79, 218, 0.16),
+              transparent 45%
+            ),
+            #0a0a0e;
+          box-shadow: 0 35px 100px rgba(81, 38, 145, 0.1);
+        }
+
+        .pricingGlow {
+          position: absolute;
+          width: 250px;
+          height: 250px;
+          right: -100px;
+          top: -100px;
+          border-radius: 50%;
+          background: rgba(139, 78, 222, 0.13);
+          filter: blur(70px);
+        }
+
+        .limitedBadge {
+          position: relative;
+          display: inline-flex;
+          padding: 7px 11px;
+          border: 1px solid rgba(177, 125, 242, 0.27);
+          border-radius: 30px;
+          color: #b991e6;
+          background: rgba(157, 93, 231, 0.07);
+          font-size: 8px;
+          font-weight: 800;
+          letter-spacing: 1.5px;
+        }
+
+        .pricingMain {
+          position: relative;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          gap: 50px;
+          margin: 50px 0;
+        }
+
+        .priceText {
+          text-align: center;
+        }
+
+        .priceText > span {
+          color: #686872;
+          font-size: 8px;
+          font-weight: 800;
+          letter-spacing: 2px;
+        }
+
+        .priceText > div {
+          margin-top: 9px;
+          font-size: clamp(35px, 5vw, 57px);
+          font-weight: 800;
+          letter-spacing: -3px;
+        }
+
+        .priceText small {
+          margin-right: 3px;
+          color: #a87ee0;
+          font-size: 20px;
+          letter-spacing: 0;
+        }
+
+        .priceText p {
+          margin: 5px 0 0;
+          color: #666671;
+          font-size: 9px;
+        }
+
+        .pricePlus {
+          color: #4c4c55;
+          font-size: 27px;
+        }
+
+        .pricingDivider {
+          height: 1px;
+          background: rgba(255, 255, 255, 0.08);
+        }
+
+        .pricingBottom {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          gap: 30px;
+          margin-top: 30px;
+        }
+
+        .pricingFeatures {
+          display: grid;
+          grid-template-columns: 1fr 1fr;
+          gap: 12px 35px;
+        }
+
+        .pricingFeatures span {
+          color: #8d8d97;
+          font-size: 9px;
+        }
+
+        .showcaseSection {
+          background: #08080b;
+        }
+
+        .showcaseTop {
+          display: flex;
+          align-items: end;
+          justify-content: space-between;
+          gap: 50px;
+          margin-bottom: 50px;
+        }
+
+        .showcaseTop > p {
+          max-width: 350px;
+          margin: 0;
+          color: #71717c;
+          font-size: 12px;
+          line-height: 1.8;
+        }
+
+        .showcaseChat {
+          max-width: 820px;
+          margin: auto;
+          border: 1px solid rgba(255, 255, 255, 0.1);
+          border-radius: 20px;
+          background: #0c0c10;
+          box-shadow: 0 40px 100px rgba(0, 0, 0, 0.35);
+          overflow: hidden;
+        }
+
+        .showcaseHeader {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          padding: 18px 23px;
+          border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+        }
+
+        .showcaseBrand {
+          display: flex;
+          align-items: center;
+          gap: 10px;
+          font-size: 12px;
+          font-weight: 700;
+        }
+
+        .showcaseBrand div {
+          display: grid;
+          place-items: center;
+          width: 29px;
+          height: 29px;
+          border-radius: 8px;
+          color: #bd8ef3;
+          background: rgba(142, 78, 222, 0.11);
+        }
+
+        .liveStatus {
+          display: flex;
+          align-items: center;
+          gap: 6px;
+          color: #666670;
+          font-size: 8px;
+          letter-spacing: 1px;
+        }
+
+        .showcaseMessages {
+          display: grid;
+          gap: 18px;
+          padding: 35px;
+        }
+
+        .showcaseCustomer,
+        .showcaseBot {
+          max-width: 65%;
+        }
+
+        .showcaseCustomer {
+          margin-left: auto;
+        }
+
+        .showcaseCustomer p,
+        .showcaseBot p {
+          margin: 7px 0 0;
+          padding: 14px 17px;
+          border-radius: 12px;
+          font-size: 11px;
+          line-height: 1.7;
+        }
+
+        .showcaseCustomer p {
+          background: rgba(255, 255, 255, 0.065);
+          color: #c5c5cc;
+        }
+
+        .showcaseBot {
+          display: flex;
+          gap: 10px;
+        }
+
+        .showcaseBotIcon {
+          width: 29px;
+          height: 29px;
+          border-radius: 8px;
+        }
+
+        .showcaseBot p {
+          background: rgba(133, 76, 218, 0.09);
+          border: 1px solid rgba(158, 100, 237, 0.12);
+          color: #bcb3c9;
+        }
+
+        .demoInput {
+          margin: 0 25px 25px;
+        }
+
+        .faqSection {
+          display: grid;
+          grid-template-columns: 0.75fr 1.25fr;
+          gap: 100px;
+        }
+
+        .faqIntro p {
+          max-width: 350px;
+          margin-top: 25px;
+          color: #72727d;
+          font-size: 12px;
+          line-height: 1.8;
+        }
+
+        .faqList {
+          border-top: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .faqItem {
+          border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .faqItem button {
+          width: 100%;
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          gap: 20px;
+          padding: 24px 0;
+          border: 0;
+          background: transparent;
+          color: #d8d8df;
+          text-align: left;
+          cursor: pointer;
+          font-size: 13px;
+        }
+
+        .faqItem button i {
+          display: grid;
+          place-items: center;
+          width: 26px;
+          height: 26px;
+          border: 1px solid rgba(255, 255, 255, 0.1);
+          border-radius: 50%;
+          color: #9e72cf;
+          font-style: normal;
+        }
+
+        .faqAnswer {
+          display: grid;
+          grid-template-rows: 0fr;
+          transition: 0.3s ease;
+        }
+
+        .faqAnswer p {
+          min-height: 0;
+          margin: 0;
+          overflow: hidden;
+          color: #72727c;
+          font-size: 11px;
+          line-height: 1.8;
+        }
+
+        .faqItem.active .faqAnswer {
+          grid-template-rows: 1fr;
+        }
+
+        .faqItem.active .faqAnswer p {
+          padding-bottom: 24px;
+        }
+
+        .ctaSection {
+          min-height: 560px;
+          display: grid;
+          place-items: center;
+          padding: 100px 7vw;
+          text-align: center;
+          overflow: hidden;
+          background:
+            radial-gradient(
+              circle at center,
+              rgba(126, 68, 214, 0.15),
+              transparent 42%
+            ),
+            #07070a;
+        }
+
+        .ctaGlow {
+          position: absolute;
+          width: 500px;
+          height: 500px;
+          border: 1px solid rgba(160, 102, 235, 0.08);
+          border-radius: 50%;
+          box-shadow:
+            0 0 0 100px rgba(160, 102, 235, 0.02),
+            0 0 0 200px rgba(160, 102, 235, 0.015);
+        }
+
+        .ctaContent {
+          position: relative;
+          z-index: 2;
+        }
+
+        .ctaContent > p {
+          max-width: 550px;
+          margin: 25px auto 30px;
+          color: #797983;
+          font-size: 13px;
+          line-height: 1.8;
+        }
+
+        .ctaActions {
+          display: flex;
+          justify-content: center;
+          flex-wrap: wrap;
+          gap: 12px;
+        }
+
+        .whatsappButton {
+          background: linear-gradient(135deg, #8050d9, #9f6af3);
+        }
+
+        .ctaSecondary {
+          display: inline-flex;
+          align-items: center;
+          min-height: 50px;
+          padding: 0 20px;
+          border: 1px solid rgba(255, 255, 255, 0.12);
+          border-radius: 10px;
+          color: #9999a3;
+          font-size: 12px;
+        }
+
+        .footer {
+          padding: 65px 7vw 25px;
+          border-top: 1px solid rgba(255, 255, 255, 0.07);
+          background: #050507;
+        }
+
+        .footerTop {
+          display: flex;
+          justify-content: space-between;
+          gap: 50px;
+          padding-bottom: 60px;
+        }
+
+        .footerTop > div:first-child {
+          max-width: 330px;
+        }
+
+        .footerTop p {
+          margin-top: 20px;
+          color: #60606a;
+          font-size: 10px;
+          line-height: 1.8;
+        }
+
+        .footerLinks {
+          display: flex;
+          gap: 90px;
+        }
+
+        .footerLinks div {
+          display: flex;
+          flex-direction: column;
+          gap: 11px;
+        }
+
+        .footerLinks strong {
+          margin-bottom: 7px;
+          color: #a1a1ab;
+          font-size: 9px;
+          letter-spacing: 1px;
+        }
+
+        .footerLinks a {
+          color: #5e5e68;
+          font-size: 9px;
+          transition: 0.2s;
+        }
+
+        .footerLinks a:hover {
+          color: #b78bea;
+        }
+
+        .footerBottom {
+          display: flex;
+          justify-content: space-between;
+          padding-top: 20px;
+          border-top: 1px solid rgba(255, 255, 255, 0.06);
+          color: #4e4e57;
+          font-size: 8px;
+        }
+
+        @media (max-width: 1050px) {
+          .hero {
+            grid-template-columns: 1fr;
+          }
+
+          .heroContent {
+            text-align: center;
+          }
+
+          .hero h1,
+          .heroDescription {
+            margin-left: auto;
+            margin-right: auto;
+          }
+
+          .heroActions,
+          .heroTrust {
+            justify-content: center;
+          }
+
+          .heroVisual {
+            min-height: 600px;
+          }
+
+          .journeyGrid {
+            grid-template-columns: 1fr 1fr;
+          }
+
+          .journeyLine {
+            display: none;
+          }
+
+          .industryGrid {
+            grid-template-columns: 1fr 1fr;
+          }
+
+          .processSection,
+          .whySection,
+          .faqSection {
+            grid-template-columns: 1fr;
+            gap: 60px;
+          }
+
+          .processIntro {
+            position: static;
+          }
+        }
+
+        @media (max-width: 750px) {
+          .navbar {
+            padding: 0 5vw;
+          }
+
+          .navLinks,
+          .navCta {
+            display: none;
+          }
+
+          .menuButton {
+            display: block;
+          }
+
+          .navLinks.open {
+            position: absolute;
+            top: 76px;
+            left: 0;
+            right: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 0;
+            padding: 15px 7vw 25px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            background: rgba(7, 7, 10, 0.97);
+          }
+
+          .navLinks.open a {
+            width: 100%;
+            padding: 15px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+          }
+
+          .hero {
+            padding: 70px 5vw 80px;
+          }
+
+          .hero h1 {
+            font-size: clamp(43px, 12vw, 65px);
+            letter-spacing: -3px;
+          }
+
+          .heroVisual {
+            min-height: 500px;
+          }
+
+          .chatWindow {
+            transform: none;
+          }
+
+          @keyframes floatChat {
+            50% {
+              transform: translateY(-7px);
+            }
+          }
+
+          .floatingCard {
+            transform: scale(0.82);
+          }
+
+          .responseCard {
+            left: -30px;
+          }
+
+          .leadCard {
+            right: -30px;
+          }
+
+          .outcomeSection,
+          .journeySection,
+          .servicesSection,
+          .industriesSection,
+          .processSection,
+          .whySection,
+          .pricingSection,
+          .showcaseSection,
+          .faqSection {
+            padding: 90px 5vw;
+          }
+
+          .comparison,
+          .servicesGrid {
+            grid-template-columns: 1fr;
+          }
+
+          .serviceCard.large {
+            grid-column: auto;
+          }
+
+          .flow {
+            grid-template-columns: 1fr;
+            gap: 12px;
+          }
+
+          .flow i {
+            display: none;
+          }
+
+          .journeyGrid,
+          .industryGrid {
+            grid-template-columns: 1fr;
+          }
+
+          .sectionHeader,
+          .showcaseTop {
+            display: block;
+          }
+
+          .sectionHeader p,
+          .showcaseTop > p {
+            margin-top: 20px;
+          }
+
+          .serviceVisual {
+            position: static;
+            margin-top: 25px;
+            width: 100%;
+          }
+
+          .processSection {
+            gap: 50px;
+          }
+
+          .benefits {
+            grid-template-columns: 1fr;
+          }
+
+          .caseStudySection {
+            padding: 20px 5vw 90px;
+          }
+
+          .caseStudyCard {
+            grid-template-columns: 1fr;
+            padding: 30px 22px;
+          }
+
+          .caseBrowser {
+            transform: none;
+          }
+
+          .fakeWebsite {
+            min-height: 300px;
+          }
+
+          .pricingCard {
+            padding: 30px 20px;
+          }
+
+          .pricingMain {
+            gap: 15px;
+          }
+
+          .priceText > div {
+            font-size: 31px;
+            letter-spacing: -2px;
+          }
+
+          .pricingBottom {
+            display: block;
+          }
+
+          .pricingFeatures {
+            grid-template-columns: 1fr;
+            margin-bottom: 25px;
+          }
+
+          .showcaseMessages {
+            padding: 25px 17px;
+          }
+
+          .showcaseCustomer,
+          .showcaseBot {
+            max-width: 90%;
+          }
+
+          .ctaContent h2 {
+            font-size: 40px;
+            letter-spacing: -2px;
+          }
+
+          .footerTop {
+            display: block;
+          }
+
+          .footerLinks {
+            margin-top: 40px;
+            gap: 60px;
+          }
+
+          .footerBottom {
+            display: block;
+          }
+
+          .footerBottom span {
+            display: block;
+            margin-top: 8px;
+          }
+        }
+      `}</style>
+    </>
+  );
 }
