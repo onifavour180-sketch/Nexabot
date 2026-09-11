@@ -93,14 +93,17 @@ export function PurpleJasmineChat() {
       if (whatsappMatch) {
         const message = whatsappMatch[1];
 
-        const whatsappUrl = `https://wa.me/2348148247243?text=${encodeURIComponent(
-          message
-        )}`;
+        const whatsappUrl =
+          `https://wa.me/2348148247243?text=${encodeURIComponent(
+            message
+          )}`;
 
         return (
           <div
             key={lineIndex}
-            style={{ marginTop: "8px" }}
+            style={{
+              marginTop: "8px",
+            }}
           >
             <a
               href={whatsappUrl}
@@ -135,29 +138,53 @@ export function PurpleJasmineChat() {
   return (
     <>
       {!open && (
-        <button
-          onClick={() => setOpen(true)}
-          aria-label="Open Purple Jasmine Cafe assistant"
+        <div
           style={{
             position: "fixed",
             right: "24px",
             bottom: "70px",
-            width: "62px",
-            height: "62px",
-            borderRadius: "50%",
-            border: "1px solid rgba(255,255,255,0.2)",
-            background:
-              "linear-gradient(135deg, #b78a4a, #6d4322)",
-            color: "white",
-            fontSize: "25px",
-            cursor: "pointer",
-            boxShadow:
-              "0 15px 50px rgba(80,50,20,0.45)",
+            display: "flex",
+            alignItems: "center",
+            gap: "10px",
             zIndex: 100,
           }}
         >
-          ✦
-        </button>
+          <div
+            style={{
+              background: "#15110d",
+              color: "white",
+              padding: "10px 14px",
+              borderRadius: "12px",
+              fontSize: "12px",
+              fontWeight: 600,
+              boxShadow: "0 10px 30px rgba(0,0,0,0.35)",
+              border: "1px solid rgba(255,255,255,0.1)",
+              whiteSpace: "nowrap",
+            }}
+          >
+            Chat with Purple Jasmine
+          </div>
+
+          <button
+            onClick={() => setOpen(true)}
+            aria-label="Open Purple Jasmine Cafe assistant"
+            style={{
+              width: "62px",
+              height: "62px",
+              borderRadius: "50%",
+              border: "1px solid rgba(255,255,255,0.2)",
+              background:
+                "linear-gradient(135deg, #b78a4a, #6d4322)",
+              color: "white",
+              fontSize: "25px",
+              cursor: "pointer",
+              boxShadow:
+                "0 15px 50px rgba(80,50,20,0.45)",
+            }}
+          >
+            ✦
+          </button>
+        </div>
       )}
 
       {open && (
@@ -182,8 +209,6 @@ export function PurpleJasmineChat() {
             zIndex: 100,
           }}
         >
-          {/* Header */}
-
           <div
             style={{
               padding: "17px",
@@ -246,8 +271,6 @@ export function PurpleJasmineChat() {
             </button>
           </div>
 
-          {/* Messages */}
-
           <div
             style={{
               flex: 1,
@@ -305,8 +328,6 @@ export function PurpleJasmineChat() {
             )}
           </div>
 
-          {/* Input */}
-
           <div
             style={{
               padding: "12px",
@@ -348,9 +369,7 @@ export function PurpleJasmineChat() {
 
               <button
                 onClick={sendMessage}
-                disabled={
-                  loading || !input.trim()
-                }
+                disabled={loading || !input.trim()}
                 style={{
                   width: "38px",
                   height: "38px",
